@@ -65,7 +65,13 @@ $imagePath=$row['image'];
         aria-expanded="false"
       >
        
+      <?php  
+      $current_url = $_SERVER['REQUEST_URI'];
+      if($current_url=="/php_form/admin/dashboard.php"){?>
         <img src="<?php echo $imagePath ; ?>" alt="" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">
+      <?php } else{?>
+                <img src="../<?php echo $imagePath ; ?>" alt="" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">
+      <?php } ?>
         <span><?php echo $_SESSION['user_name'] ?></span>
       </a>
 

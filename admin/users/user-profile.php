@@ -67,7 +67,7 @@ else if(isset($_POST['updateprofile']) && isset( $_POST['id']) && $_POST['id']!=
       $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . '../uploads' . DIRECTORY_SEPARATOR;
       if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
       if (move_uploaded_file($tmp, $uploadDir . $newName)) {
-        $imagePath = '../uploads/' . $newName;
+        $imagePath = 'uploads/' . $newName;
       }
     }
   }
@@ -99,7 +99,7 @@ include('../layout/navbar.php');
                       <form action="user-profile.php" method="POST" enctype="multipart/form-data">
                       <div class="d-flex align-items-center gap-3">
                           <input type="hidden" class="form-control" value="<?php echo $_SESSION['id']; ?>" name="id" >
-                          <img src="<?php echo $imagePath; ?>" class="rounded-circle border" width="120" height="120" style="object-fit: cover;">
+                          <img src="../<?php echo $imagePath; ?>" class="rounded-circle border" width="120" height="120" style="object-fit: cover;">
                           <div>
                               <label class="btn btn-outline-primary btn-sm mb-2">
                                   <i class="bi bi-camera"></i> Change Photo
