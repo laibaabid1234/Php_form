@@ -91,7 +91,7 @@ $sub_category=mysqli_query($conn,$query1);
           <div class="col-sm-12">
             <div class="card">
               <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-3">sub_category Table</h5>
+                <h5 class="mb-3">Sub Category Table</h5>
 
               <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -134,7 +134,7 @@ $sub_category=mysqli_query($conn,$query1);
                                 <form method="POST" action="sub_category.php" style="display:inline;">
 
                                     <div class="modal-header">
-                                      <h1 class="modal-title fs-5" id="exampleModalLabel">Add Sub_category here</h1>
+                                      <h1 class="modal-title fs-5" id="exampleModalLabel">Add Sub Category here</h1>
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -142,7 +142,7 @@ $sub_category=mysqli_query($conn,$query1);
                                       <div class="container">
                                         <div class="row">
                                           <div class="col-lg-12">
-                                            <label class="form-label">Sub_category</label>
+                                            <label class="form-label">Sub Category</label>
                                             <input type="hidden" class="form-control" name="id" aria-label="Username" value="<?php echo $row['id'] ?>" aria-describedby="basic-addon1">
                                             <input type="text" class="form-control" name="name" value="<?php echo $row['sub_name'] ?>" aria-label="Username" aria-describedby="basic-addon1">
                                           </div>
@@ -194,15 +194,15 @@ $sub_category=mysqli_query($conn,$query1);
                 
                   <form action="sub_category.php" method="post">
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">Add Sub_category here</h1>
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Add Sub Category here</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                       <div class="container">
                         <div class="row">
                             <div class="col-lg-12">
-                              <label class="form-label">Sub_category</label>
-                              <input type="text" class="form-control" name="name" placeholder="Enter your sub_category" aria-label="Username" aria-describedby="basic-addon1">
+                              <label class="form-label">Sub Category</label>
+                              <input type="text" class="form-control" name="name" placeholder="Enter your Sub Category" aria-label="Username" aria-describedby="basic-addon1">
                             </div>
                             <div class="col-lg-12 mt-3">
                               <label class="form-label">Category</label>
@@ -238,7 +238,7 @@ $sub_category=mysqli_query($conn,$query1);
           <div class="col-sm-12">
             <div class="card">
               <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-3">sub_category Table</h5>
+                <h5 class="mb-3">Sub Category Table</h5>
               </div>
 
             <!-- Table start -->

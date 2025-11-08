@@ -87,6 +87,12 @@
             <span class="pc-mtext">Sub Category</span>
           </a>
         </li>
+        <li class="pc-item">
+          <a href="<?php echo $basePath; ?>products/products.php" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-users"></i></span>
+            <span class="pc-mtext">Products</span>
+          </a>
+        </li>
 
       </ul>
       <div class="card text-center">
