@@ -26,6 +26,7 @@ if(isset($_POST['cat_id']) && $_POST['cat_id'] != null){
 if ($_SESSION['user_role'] != "admin"){
 header("Location: form.php");
 }
+
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
 echo "<script>
