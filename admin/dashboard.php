@@ -8,7 +8,7 @@ if(!isset($_SESSION['user_name']))
 if ($_SESSION['user_role'] != "admin"){
 header("Location: users/form.php");
 }
-$basePath = './';
+$basePath = '';
 include('layout/sidebar.php');
 include('layout/navbar.php');
 
