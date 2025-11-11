@@ -56,8 +56,7 @@ if (window.history.replaceState) {
                       <label class="form-label">Product Price</label>
                      <input type="number" class="form-control" placeholder="Product Price" value="<?php echo $editrow['p_price'] ?>" name="p_price" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
-
-                     <div class="col-lg-12 mt-3">  
+                    <div class="col-lg-12 mt-3">  
                         <label class="form-label">Category</label>                             
                         <select name="cat_id" id="" class="form-control">
                         <option value="">Select Category</option>
@@ -77,13 +76,15 @@ if (window.history.replaceState) {
                       <div class="col-lg-12 mt-3 mb-3">  
                         <label class="form-label">Sub Category</label>                             
                         <select name="subcat_id" id="" class="form-control">
-                        <option value="">Select Sub Category First</option>
+                        <option value="">Select Category First</option>
                         </select>
                       </div>
-                  <button class="btn btn-primary" type="submit" name="update">Update</button>
+                      <div class="form-group">
+                        <input type="file" class="form-control" name="image" aria-describedby="basic-addon1">
+                      </div>
+                      <button class="btn btn-primary" type="submit" name="update">Update</button>
                     </form>
-                </div>
-               
+                </div>              
               </div>
             </div>
           </div>
@@ -98,13 +99,14 @@ if (window.history.replaceState) {
               url:'add_products.php',
               data:{cat_id:catID},
               success:function(data){
-                  $('select[name="subcat_id"]').html(data);
+                  $('select[name="subcat_id"]').html(data);               
               }
             });   
           } else {
               $('select[name="subcat_id"]').html('<option value="">Select Sub Category</option>');
           }
       });
+       $('select[name="cat_id"]').trigger('change');
   });
   </script>
  <?php

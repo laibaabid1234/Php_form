@@ -47,6 +47,7 @@ $query=mysqli_query($conn,$count);
           </div>
         </div>
         </div>
+      
 
 <?php
 include('layout/footer.php');
