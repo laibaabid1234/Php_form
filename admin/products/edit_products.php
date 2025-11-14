@@ -15,11 +15,17 @@ if(isset($_GET['p_id'])&& $_GET['p_id']!=null)
 }
 if(isset($_POST['cat_id']) && $_POST['cat_id'] != null){
        $cat_id = $_POST['cat_id'];
+       $subID = $_POST['SubcatID'];
        $subcat_query="Select * from sub_category where cat_id='$cat_id'";
        $subcat_data=mysqli_query($conn,$subcat_query);  
        echo '<option value="">Select Sub Category</option>';
          while($subcat=mysqli_fetch_assoc($subcat_data)){
-         echo '<option value="'.$subcat['id'].'">'. $subcat["name"].'</option>';
+          if ($subID == $subcat['id']) {
+            $selected = 'selected';
+          } else {
+            $selected = '';
+          }
+        echo '<option value="' . $subcat['id'] . '" ' . $selected . '>' . $subcat['name'] . '</option>';
        }
     exit(); 
    }  
@@ -78,6 +84,7 @@ if (window.history.replaceState) {
                         <select name="subcat_id" id="" class="form-control">
                         <option value="">Select Category First</option>
                         </select>
+                        <input type="hidden" id="SubcatID" value="<?php echo $editrow['subcat_id']; ?>">
                       </div>
                       <div class="form-group">
                         <input type="file" class="form-control" name="image" aria-describedby="basic-addon1">
@@ -93,11 +100,12 @@ if (window.history.replaceState) {
   $(document).ready(function(){
       $('select[name="cat_id"]').on('change', function() {
           var catID = $(this).val();
+          var subID = $('#SubcatID').val();
           if(catID) {
             $.ajax({
               type:'POST',
-              url:'add_products.php',
-              data:{cat_id:catID},
+              url:'edit_products.php',
+              data:{cat_id:catID, SubcatID:subID},
               success:function(data){
                   $('select[name="subcat_id"]').html(data);               
               }

@@ -43,6 +43,7 @@ else if(isset($_POST['add']) && isset($_POST['name']) && $_POST['name']!= null){
         $msg="New record has been submitted";
     }
 }
+
 echo "<script>
 if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
@@ -104,6 +105,7 @@ $category=mysqli_query($conn,$query1);
                         <th>Id</th>
                         <th>Name</th>
                         <th>Actions</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -120,7 +122,13 @@ $category=mysqli_query($conn,$query1);
                             <input type="hidden" name="id" value="<?php echo $row['id'] ?>">
                             <button type="submit" name="delete"  class="btn btn-danger">Delete</button>
                           </form>
-                       </td> 
+                       </td>      
+                       <td>                        
+                          <div class="form-check form-switch">
+                            <input type="hidden" id="toggle_id" value="<?php echo $row['id'] ?>">
+                            <input class="form-check-input" type="checkbox" name="toggle" role="switch" id="myToggleSwitch">                                              
+                          </div>                                                              
+                       </td>
                     </tr>
                     <!-- edit modal start -->
                             <div class="modal fade" id="editModal_<?php echo $row['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -219,8 +227,7 @@ $category=mysqli_query($conn,$query1);
               </div>
             </div>
           </div>
-            <?php }?>
-        
+            <?php }?> 
 <?php
 include('../layout/footer.php');
 ?>

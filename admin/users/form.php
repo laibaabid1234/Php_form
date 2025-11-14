@@ -206,8 +206,7 @@ $users=mysqli_query($conn,$query1);
                         <th>Name</th>
                         <th>Email</th>
                         <th>Contact</th>
-                        <th>Image</th>
-                        
+                        <th>Image</th>                       
                       </tr>
                     </thead>
                     <tbody>
@@ -217,7 +216,7 @@ $users=mysqli_query($conn,$query1);
                                 <td><?php echo $row['name'] ?></td>
                                 <td><?php echo $row['email'] ?></td>
                                 <td><?php echo $row['contact'] ?></td>
-                                <td><img src="<?php echo $row['image']; ?>" alt="" width="100px"></td>
+                                <td><img src="../<?php echo $row['image']; ?>" alt="" width="100px"></td>
 
                             </tr>
                         <?php } ?>
