@@ -67,11 +67,15 @@ $imagePath=$row['image'];
        
       <?php  
       $current_url = $_SERVER['REQUEST_URI'];
+      if($imagePath==null || $imagePath==""){
+        $imagePath="assets/images/user/avatar-2.jpg";
+      }
       if($current_url=="/php_form/admin/dashboard.php"){?>
         <img src="<?php echo $imagePath ; ?>" alt="" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">
       <?php } else{?>
-                <img src="../<?php echo $imagePath ; ?>" alt="" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">
+        <img src="../<?php echo $imagePath ; ?>" alt="" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">
       <?php } ?>
+      
         <span><?php echo $_SESSION['user_name'] ?></span>
       </a>
 
@@ -94,7 +98,7 @@ $imagePath=$row['image'];
            <i class="ti ti-user"></i>
               <span>Profile</span>
             </a>
-            <a href="<?php echo $basePath; ?><?php echo $basePath; ?>logout.php" class="dropdown-item">
+            <a href="../logout.php" class="dropdown-item">
               <i class="ti ti-power"></i>
               <span>Logout</span>
             </a>
