@@ -5,6 +5,28 @@ if(!isset($_SESSION['user_name']))
     header("Location: ../../login.php");
     exit();
 }
+if(isset($_POST['statusId']) && $_POST['statusId'] != null){
+    $Id = $_POST['statusId'];
+    $categoryStatusQuery = "SELECT status FROM category WHERE id = $Id";
+    $statusResult = mysqli_query($conn, $categoryStatusQuery);
+    $statusRow = mysqli_fetch_assoc($statusResult);
+    $statusId = $statusRow['status'];
+    if($statusId==0){
+      $statusId=1;
+    }else{
+      $statusId=0;
+    }
+    $updateStatusQuery = "UPDATE category SET status = $statusId WHERE id = $Id";
+    $statuschanged=mysqli_query($conn, $updateStatusQuery);
+    if($statuschanged){
+      $statusmessage = "Status updated successfully";
+    }else{
+      $statusmessage = "Status not updated";  
+    }   
+    echo json_encode(['statusmessage' => $statusmessage]);
+    exit();
+  
+}
 $basePath = '../';
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
@@ -44,6 +66,8 @@ else if(isset($_POST['add']) && isset($_POST['name']) && $_POST['name']!= null){
     }
 }
 
+
+
 echo "<script>
 if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
@@ -51,6 +75,7 @@ if (window.history.replaceState) {
 </script>";
 $query1="select * from category";
 $category=mysqli_query($conn,$query1);
+
 ?>
  <!-- [ breadcrumb ] start -->
         <div class="page-header">
@@ -125,8 +150,7 @@ $category=mysqli_query($conn,$query1);
                        </td>      
                        <td>                        
                           <div class="form-check form-switch">
-                            <input type="hidden" id="toggle_id" value="<?php echo $row['id'] ?>">
-                            <input class="form-check-input" type="checkbox" name="toggle" role="switch" id="myToggleSwitch">                                              
+                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch" id="myToggleSwitch">                                              
                           </div>                                                              
                        </td>
                     </tr>
@@ -228,6 +252,26 @@ $category=mysqli_query($conn,$query1);
             </div>
           </div>
             <?php }?> 
+
+
+<script>
+   $(document).ready(function(){
+    $('.toggle').change(function(){
+     var status_id= $(this).val();
+        $.ajax({
+          url:'category.php',
+          type:'post',
+          data:{statusId:status_id},
+          success:function(response){
+            response = JSON.parse(response);
+            alert(response.statusmessage);
+          }
+
+        });
+    });
+  
+   });
+</script>
 <?php
 include('../layout/footer.php');
 ?>

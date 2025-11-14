@@ -20,38 +20,6 @@ include('../connection.php');
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <!-- <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item dropdown">
-          <a class="nav-link " href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            Category
-          </a>
-        <?php 
-         $sql = "SELECT id, name FROM category";  
-            $result = $conn->query($sql);
-            while($row = $result->fetch_assoc()) {
-                $categoryId = $row['id'];
-                $categoryName = $row['name'];
-         
-         echo' <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-                <li class="dropdown-submenu position-relative">
-                    <a class="dropdown-item" href="#">'.$categoryName.'</a>
-                    <ul class="dropdown-menu">';
-                                // Fetch sub-categories for each category
-                    $subSql = "SELECT id, name FROM sub_category WHERE cat_id = $categoryId";
-                                $subResult = $conn->query($subSql); 
-                                while($subRow = $subResult->fetch_assoc()) {
-                                    $subCategoryName = $subRow['name'];
-                                    echo '<li><a class="dropdown-item" href="#">'.$subCategoryName.'</a></li>';
-                                }
-                    echo '</ul>';
-                echo '</li>';
-            echo '</ul>';
-            }  
-         ?>
-          
-        </li>
-      </ul> -->
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
     <li class="nav-item dropdown">
         <a class="nav-link" href="#" id="categoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -67,7 +35,7 @@ include('../connection.php');
                 $categoryName = $row['name'];
                 
                 echo '<li class="dropdown-submenu position-relative">';
-                echo '<a class="dropdown-item dropdown-toggle" href="#">'.$categoryName.'</a>';
+                echo '<a class="dropdown-item dropdown-toggle" href="products.php?cat_id='.$categoryId.'"">'.$categoryName.'</a>';
                 echo '<ul class="dropdown-menu">';
                 
                 // Fetch sub-categories for this category
@@ -75,8 +43,9 @@ include('../connection.php');
                 $subResult = $conn->query($subSql); 
                 
                 while ($subRow = $subResult->fetch_assoc()) {
+                  $subCategoryId = $subRow['id'];
                     $subCategoryName = $subRow['name'];
-                    echo '<li><a class="dropdown-item" href="#">'.$subCategoryName.'</a></li>';
+                    echo '<li><a class="dropdown-item" href="products.php?cat_id='.$categoryId.'?sub_cat='.$subCategoryId.'">'.$subCategoryName.'</a></li>';
                 }
 
                 echo '</ul>'; // close subcategory menu
