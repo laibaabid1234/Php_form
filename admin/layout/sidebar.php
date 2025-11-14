@@ -56,7 +56,7 @@
     <div class="m-header">
       <a href="<?php echo $basePath; ?>dashboard/index.html" class="b-brand text-primary">
         <!-- ========   Change your logo from here   ============ -->
-        <img src="<?php echo $basePath; ?>assets/images/logo-dark.svg" class="img-fluid logo-lg" alt="logo">
+        <img src="<?php echo $basePath; ?>assets/images/logo-icon.svg" class="img-fluid logo-lg" alt="logo">
       </a>
     </div>
     <div class="navbar-content">

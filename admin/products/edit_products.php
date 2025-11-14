@@ -13,9 +13,26 @@ if(isset($_GET['p_id'])&& $_GET['p_id']!=null)
     $products=mysqli_query($conn,$query);
     $editrow=mysqli_fetch_assoc($products);
 }
+if(isset($_POST['cat_id']) && $_POST['cat_id'] != null){
+       $cat_id = $_POST['cat_id'];
+       $subID = $_POST['SubcatID'];
+       $subcat_query="Select * from sub_category where cat_id='$cat_id'";
+       $subcat_data=mysqli_query($conn,$subcat_query);  
+       echo '<option value="">Select Sub Category</option>';
+         while($subcat=mysqli_fetch_assoc($subcat_data)){
+          if ($subID == $subcat['id']) {
+            $selected = 'selected';
+          } else {
+            $selected = '';
+          }
+        echo '<option value="' . $subcat['id'] . '" ' . $selected . '>' . $subcat['name'] . '</option>';
+       }
+    exit(); 
+   }  
 if ($_SESSION['user_role'] != "admin"){
 header("Location: form.php");
 }
+
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
 echo "<script>
@@ -45,8 +62,7 @@ if (window.history.replaceState) {
                       <label class="form-label">Product Price</label>
                      <input type="number" class="form-control" placeholder="Product Price" value="<?php echo $editrow['p_price'] ?>" name="p_price" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
-
-                     <div class="col-lg-12 mt-3">  
+                    <div class="col-lg-12 mt-3">  
                         <label class="form-label">Category</label>                             
                         <select name="cat_id" id="" class="form-control">
                         <option value="">Select Category</option>
@@ -66,28 +82,41 @@ if (window.history.replaceState) {
                       <div class="col-lg-12 mt-3 mb-3">  
                         <label class="form-label">Sub Category</label>                             
                         <select name="subcat_id" id="" class="form-control">
-                        <option value="">Select Sub Category</option>
-                          <?php 
-                           $subcat_query="Select * from sub_category";
-                           $subcat_data=mysqli_query($conn,$subcat_query);                     
-                           while($subcat=mysqli_fetch_assoc($subcat_data)){
-                            if($editrow['subcat_id']==$subcat["id"])  { ?>
-                            <option selected value="<?php echo $subcat["id"]; ?>"><?php echo $subcat["name"]; ?></option>
-                            <?php }else{ ?>
-                            <option value="<?php echo $subcat["id"]; ?>"><?php echo $subcat["name"]; ?></option>
-                            <?php  } ?>
-                           <?php  } ?>
-                         </select>
-                     </div>
-                  <button class="btn btn-primary" type="submit" name="update">Update</button>
+                        <option value="">Select Category First</option>
+                        </select>
+                        <input type="hidden" id="SubcatID" value="<?php echo $editrow['subcat_id']; ?>">
+                      </div>
+                      <div class="form-group">
+                        <input type="file" class="form-control" name="image" aria-describedby="basic-addon1">
+                      </div>
+                      <button class="btn btn-primary" type="submit" name="update">Update</button>
                     </form>
-                </div>
-               
+                </div>              
               </div>
             </div>
           </div>
  <!-- main content end -->
-
+ <script>
+  $(document).ready(function(){
+      $('select[name="cat_id"]').on('change', function() {
+          var catID = $(this).val();
+          var subID = $('#SubcatID').val();
+          if(catID) {
+            $.ajax({
+              type:'POST',
+              url:'edit_products.php',
+              data:{cat_id:catID, SubcatID:subID},
+              success:function(data){
+                  $('select[name="subcat_id"]').html(data);               
+              }
+            });   
+          } else {
+              $('select[name="subcat_id"]').html('<option value="">Select Sub Category</option>');
+          }
+      });
+       $('select[name="cat_id"]').trigger('change');
+  });
+  </script>
  <?php
 include('../layout/footer.php');
 ?>

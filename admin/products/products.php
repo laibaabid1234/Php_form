@@ -16,8 +16,28 @@ if(isset($_POST['update']) && isset( $_POST['id']) && $_POST['id']!= null){
     $price=$_POST['p_price'];
     $cat_id=$_POST['cat_id'];
     $subcat_id=$_POST['subcat_id'];
+    $imagePath=null;
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $tmp = $_FILES['image']['tmp_name'];
+    $origName = basename($_FILES['image']['name']);
+    $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+    $allowed = array('jpg','jpeg','png','gif');
+    if (in_array($ext, $allowed) && @getimagesize($tmp)) {
+      $newName = uniqid('img_', true) . '.' . $ext;
+      $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . '../uploads' . DIRECTORY_SEPARATOR;
+      if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+      if (move_uploaded_file($tmp, $uploadDir . $newName)) {
+        $imagePath = '../uploads/' . $newName;
+      }
+    }
+  }
+  if ($imagePath) { 
+    $query="update products set p_name='$name', p_price='$price', cat_id='$cat_id', subcat_id='$subcat_id',image='$imagePath' where id='$id'";
+  }
+  else{
     $query="update products set p_name='$name', p_price='$price', cat_id='$cat_id', subcat_id='$subcat_id' where id='$id'";
-    $data=mysqli_query($conn,$query);
+  } 
+   $data=mysqli_query($conn,$query);
    if($data){
        $msg="Changes Saved!";
     }
@@ -42,14 +62,33 @@ else if(isset($_POST['add']) && isset($_POST['p_name']) && $_POST['p_name']!= nu
     $price=$_POST['p_price'];
     $cat_id=$_POST['cat_id'];
     $subcat_id=$_POST['subcat_id'];
+    $imagePath=null;
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $tmp = $_FILES['image']['tmp_name'];
+    $origName = basename($_FILES['image']['name']);
+    $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+    $allowed = array('jpg','jpeg','png','gif');
+    if (in_array($ext, $allowed) && @getimagesize($tmp)) {
+      $newName = uniqid('img_', true) . '.' . $ext;
+      $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . '../uploads' . DIRECTORY_SEPARATOR;
+      if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+      if (move_uploaded_file($tmp, $uploadDir . $newName)) {
+        $imagePath = '../uploads/' . $newName;
+      }
+    }
+  }
+  if ($imagePath) {
+    $query = "INSERT INTO products (p_name, p_price,cat_id,subcat_id,image) VALUES ('$name', '$price','$cat_id','$subcat_id','$imagePath')";
+  } else {
     $query = "INSERT INTO products (p_name, p_price,cat_id,subcat_id) VALUES ('$name', '$price','$cat_id','$subcat_id')";
+  }
     $data=mysqli_query($conn,$query);
     if($data)
     {
         $msg="New record has been submitted";
     }
 }
-$query1="SELECT products.id AS p_id, products.p_name,category.name AS cat_name, sub_category.name AS sub_name,products.p_price as p_price FROM products INNER JOIN 
+$query1="SELECT products.id AS p_id, products.p_name,products.image as image, category.name AS cat_name, sub_category.name AS sub_name,products.p_price as p_price FROM products INNER JOIN 
 sub_category ON sub_category.id=products.subcat_id INNER JOIN category ON category.id=products.cat_id";
 $products=mysqli_query($conn,$query1);
 
@@ -110,6 +149,7 @@ if (window.history.replaceState) {
                         <th>Price</th>
                         <th>Category Name</th>
                         <th>Sub Category Name</th>
+                        <th>Image</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -120,7 +160,8 @@ if (window.history.replaceState) {
                       <td><?php echo $row['p_name'] ?></td> 
                       <td><?php echo $row['p_price'] ?></td> 
                       <td><?php echo $row['cat_name'] ?></td> 
-                      <td><?php echo $row['sub_name'] ?></td>           
+                      <td><?php echo $row['sub_name'] ?></td>  
+                      <td><img src="<?php echo $row['image']; ?>" alt="" width="100px" ></td>         
                       <td> 
                           <a href="edit_products.php?p_id=<?php echo $row['p_id'] ?>" class="btn btn-warning">Edit</a>
                           <form action="products.php" method="post" style="display:inline;">

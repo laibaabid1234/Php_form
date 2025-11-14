@@ -63,11 +63,14 @@
                               <?php  } ?>
                           </select>
                       </div>
-                        <div class="col-lg-12 mt-3 mb-3">  
+                      <div class="col-lg-12 mt-3 mb-3">  
                           <label class="form-label">Sub Category</label>                             
                           <select name="subcat_id" id="" class="form-control">
                           <option value="">Select Category first</option>
                           </select>
+                      </div>
+                      <div class="form-group">
+                      <input type="file" class="form-control" name="image" aria-describedby="basic-addon1">
                       </div>
                       <button type="submit" name="add" class="btn btn-primary mb-4">Submit</button>
                       </form>

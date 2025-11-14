@@ -159,9 +159,9 @@ $users=mysqli_query($conn,$query1);
                         <th>Id</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Contact</th>
-                        <th>Actions</th>
+                        <th>Contact</th>                       
                         <th>Image</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -170,7 +170,8 @@ $users=mysqli_query($conn,$query1);
                                 <td><?php echo $row['id'] ?></td>
                                 <td><?php echo $row['name'] ?></td>
                                 <td><?php echo $row['email'] ?></td>
-                                <td><?php echo $row['contact'] ?></td>
+                                <td><?php echo $row['contact'] ?></td>                               
+                                <td><img src="../<?php echo $row['image']; ?>" alt="" width="100px" ></td>
                                 <td> 
                                     <a href="edit_users.php?id=<?php echo $row['id'] ?>"  class="btn btn-warning">Edit</a>
                                      <form method="POST" action="form.php" style="display:inline;">
@@ -178,7 +179,6 @@ $users=mysqli_query($conn,$query1);
                                         <button type="submit" name="delete"  class="btn btn-danger">Delete</button>
                                     </form>
                                 </td> 
-                                 <td><img src="<?php echo $row['image']; ?>" alt="" width="100px" ></td>
                             </tr>
                         <?php } ?>
                     </tbody>
@@ -206,8 +206,7 @@ $users=mysqli_query($conn,$query1);
                         <th>Name</th>
                         <th>Email</th>
                         <th>Contact</th>
-                        <th>Image</th>
-                        
+                        <th>Image</th>                       
                       </tr>
                     </thead>
                     <tbody>
@@ -217,7 +216,7 @@ $users=mysqli_query($conn,$query1);
                                 <td><?php echo $row['name'] ?></td>
                                 <td><?php echo $row['email'] ?></td>
                                 <td><?php echo $row['contact'] ?></td>
-                                <td><img src="<?php echo $row['image']; ?>" alt="" width="100px"></td>
+                                <td><img src="../<?php echo $row['image']; ?>" alt="" width="100px"></td>
 
                             </tr>
                         <?php } ?>
