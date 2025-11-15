@@ -56,7 +56,12 @@
     <div class="m-header">
       <a href="<?php echo $basePath; ?>users/form.php" class="b-brand text-primary">
         <!-- ========   Change your logo from here   ============ -->
-        <img src="<?php echo $basePath; ?>assets/images/logo-dark.svg" class="img-fluid logo-lg" alt="logo">
+         <?php $current_url = $_SERVER['REQUEST_URI'];
+        if($current_url=="/php_form/admin/dashboard.php"){?>
+          <img src="assets/images/logo-dark.svg" class="img-fluid logo-lg" alt="logo">  
+        <?php } else {?>
+          <img src="../assets/images/logo-dark.svg" class="img-fluid logo-lg" alt="logo">  
+        <?php } ?>
       </a>
     </div>
     <div class="navbar-content">
