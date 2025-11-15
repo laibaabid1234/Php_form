@@ -112,7 +112,7 @@ $query1="select * from users";
 $users=mysqli_query($conn,$query1);
 ?>
  <!-- [ breadcrumb ] start -->
-        <div class="page-header">
+        <!-- <div class="page-header">
           <div class="page-block">
             <div class="row align-items-center">
               <div class="col-md-12">
@@ -123,7 +123,7 @@ $users=mysqli_query($conn,$query1);
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- [ breadcrumb ] end -->
 
         <!-- [ Main Content ] start -->

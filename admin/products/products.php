@@ -5,6 +5,28 @@ if(!isset($_SESSION['user_name']))
     header("Location: ../../login.php");
     exit();
 }
+if(isset($_POST['statusId']) && $_POST['statusId'] != null){
+    $Id = $_POST['statusId'];
+    $productStatusQuery = "SELECT status FROM products WHERE id = $Id";
+    $statusResult = mysqli_query($conn, $productStatusQuery);
+    $statusRow = mysqli_fetch_assoc($statusResult);
+    $statusId = $statusRow['status'];
+    if($statusId==0){
+      $statusId=1;
+    }else{
+      $statusId=0;
+    }
+    $updateStatusQuery = "UPDATE products SET status = $statusId WHERE id = $Id";
+    $statuschanged=mysqli_query($conn, $updateStatusQuery);
+    if($statuschanged){
+      $statusmessage = "Status updated successfully";
+    }else{
+      $statusmessage = "Status not updated";  
+    }   
+    echo json_encode(['statusmessage' => $statusmessage]);
+    exit();
+  
+}
 $basePath = '../';
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
@@ -88,7 +110,7 @@ else if(isset($_POST['add']) && isset($_POST['p_name']) && $_POST['p_name']!= nu
         $msg="New record has been submitted";
     }
 }
-$query1="SELECT products.id AS p_id, products.p_name,products.image as image, category.name AS cat_name, sub_category.name AS sub_name,products.p_price as p_price FROM products INNER JOIN 
+$query1="SELECT products.id AS p_id, products.p_name,products.image as image, category.name AS cat_name, sub_category.name AS sub_name,products.p_price as p_price, products.status as status FROM products INNER JOIN 
 sub_category ON sub_category.id=products.subcat_id INNER JOIN category ON category.id=products.cat_id";
 $products=mysqli_query($conn,$query1);
 
@@ -99,7 +121,7 @@ if (window.history.replaceState) {
 </script>";
 ?>
  <!-- [ breadcrumb ] start -->
-        <div class="page-header">
+        <!-- <div class="page-header">
           <div class="page-block">
             <div class="row align-items-center">
               <div class="col-md-12">
@@ -110,7 +132,7 @@ if (window.history.replaceState) {
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- [ breadcrumb ] end -->
 
         <!-- [ Main Content ] start -->
@@ -151,6 +173,7 @@ if (window.history.replaceState) {
                         <th>Sub Category Name</th>
                         <th>Image</th>
                         <th>Actions</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -169,6 +192,11 @@ if (window.history.replaceState) {
                             <button type="submit" name="delete"  class="btn btn-danger">Delete</button>
                           </form>
                        </td> 
+                        <td>                        
+                          <div class="form-check form-switch">
+                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['p_id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch" id="myToggleSwitch">                                              
+                          </div>                                                              
+                       </td>
                     </tr>
       
                      <?php } ?>
@@ -200,6 +228,7 @@ if (window.history.replaceState) {
                         <th>Price</th>
                         <th>Category Name</th>
                         <th>Sub Category Name</th>
+                        <th>Image</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -209,7 +238,8 @@ if (window.history.replaceState) {
                       <td><?php echo $row['p_name'] ?></td> 
                       <td><?php echo $row['p_price'] ?></td> 
                       <td><?php echo $row['cat_name'] ?></td> 
-                      <td><?php echo $row['sub_name'] ?></td>          
+                      <td><?php echo $row['sub_name'] ?></td>  
+                       <td><img src="<?php echo $row['image']; ?>" alt="" width="100px" ></td>        
                     </td> 
                     </tr>
                     <?php } ?>
@@ -220,6 +250,24 @@ if (window.history.replaceState) {
             </div>
           </div>
             <?php }?>
+<script>
+   $(document).ready(function(){
+    $('.toggle').change(function(){
+     var status_id= $(this).val();
+        $.ajax({
+          url:'products.php',
+          type:'post',
+          data:{statusId:status_id},
+          success:function(response){
+            response = JSON.parse(response);
+            alert(response.statusmessage);
+          }
+
+        });
+    });
+  
+   });
+</script>
         
 <?php
 include('../layout/footer.php');

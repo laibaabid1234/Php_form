@@ -9,6 +9,28 @@ if(!isset($_SESSION['user_name']))
     header("Location: ../../login.php");
     exit();
 }
+if(isset($_POST['statusId']) && $_POST['statusId'] != null){
+    $Id = $_POST['statusId'];
+    $subcategoryStatusQuery = "SELECT status FROM sub_category WHERE id = $Id";
+    $statusResult = mysqli_query($conn, $subcategoryStatusQuery);
+    $statusRow = mysqli_fetch_assoc($statusResult);
+    $statusId = $statusRow['status'];
+    if($statusId==0){
+      $statusId=1;
+    }else{
+      $statusId=0;
+    }
+    $updateStatusQuery = "UPDATE sub_category SET status = $statusId WHERE id = $Id";
+    $statuschanged=mysqli_query($conn, $updateStatusQuery);
+    if($statuschanged){
+      $statusmessage = "Status updated successfully";
+    }else{
+      $statusmessage = "Status not updated";  
+    }   
+    echo json_encode(['statusmessage' => $statusmessage]);
+    exit();
+  
+}
 $data=null;
 
 if(isset($_POST['update']) && isset( $_POST['id']) && $_POST['id']!= null){
@@ -51,11 +73,11 @@ if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
 }
 </script>";
-$query1="select sub_category.id as id,category.name as cat_name,sub_category.name as sub_name,sub_category.cat_id as cat_id from sub_category inner join category on category.id=sub_category.cat_id";
+$query1="select sub_category.id as id,category.name as cat_name,sub_category.name as sub_name,sub_category.cat_id as cat_id,sub_category.status as status from sub_category inner join category on category.id=sub_category.cat_id";
 $sub_category=mysqli_query($conn,$query1);
 ?>
  <!-- [ breadcrumb ] start -->
-        <div class="page-header">
+        <!-- <div class="page-header">
           <div class="page-block">
             <div class="row align-items-center">
               <div class="col-md-12">
@@ -66,7 +88,7 @@ $sub_category=mysqli_query($conn,$query1);
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- [ breadcrumb ] end -->
 
         <!-- [ Main Content ] start -->
@@ -108,6 +130,7 @@ $sub_category=mysqli_query($conn,$query1);
                         <th>Sub Category Name</th>
                         <th>Category Name</th>
                         <th>Actions</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -126,6 +149,11 @@ $sub_category=mysqli_query($conn,$query1);
                             <button type="submit" name="delete"  class="btn btn-danger">Delete</button>
                           </form>
                        </td> 
+                       <td>                        
+                          <div class="form-check form-switch">
+                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch" id="myToggleSwitch">                                              
+                          </div>                                                              
+                       </td>
                       </tr>
                     <!-- edit modal start -->
                             <div class="modal fade" id="editModal_<?php echo $row['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -268,7 +296,24 @@ $sub_category=mysqli_query($conn,$query1);
             </div>
           </div>
             <?php }?>
-        
+<script>
+   $(document).ready(function(){
+    $('.toggle').change(function(){
+     var status_id= $(this).val();
+        $.ajax({
+          url:'sub_category.php',
+          type:'post',
+          data:{statusId:status_id},
+          success:function(response){
+            response = JSON.parse(response);
+            alert(response.statusmessage);
+          }
+
+        });
+    });
+  
+   });
+</script>
 <?php
 include('../layout/footer.php');
 ?>

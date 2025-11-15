@@ -3,7 +3,7 @@
     <!-- [ Main Content ] end -->
 <footer class="pc-footer">
     <div class="footer-wrapper container-fluid">
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-sm my-1">
           <p class="m-0"
             >Mantis &#9829; crafted by Team <a href="https://themeforest.net/user/codedthemes" target="_blank">Codedthemes</a> Distributed by <a href="https://themewagon.com/">ThemeWagon</a>.</p
@@ -14,7 +14,7 @@
             <li class="list-inline-item"><a href="<?php echo $basePath; ?>index.html">Home</a></li>
           </ul>
         </div>
-      </div>
+      </div> -->
     </div>
   </footer>
 
