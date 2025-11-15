@@ -4,7 +4,7 @@
 <!-- [Head] start -->
 
 <head>
-  <title>Home | Mantis Bootstrap 5 Admin Template</title>
+  <title>Mantis</title>
   <!-- [Meta] -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -54,9 +54,9 @@
 <nav class="pc-sidebar">
   <div class="navbar-wrapper">
     <div class="m-header">
-      <a href="<?php echo $basePath; ?>dashboard/index.html" class="b-brand text-primary">
+      <a href="<?php echo $basePath; ?>users/form.php" class="b-brand text-primary">
         <!-- ========   Change your logo from here   ============ -->
-        <img src="<?php echo $basePath; ?>assets/images/logo-icon.svg" class="img-fluid logo-lg" alt="logo">
+        <img src="<?php echo $basePath; ?>assets/images/logo-dark.svg" class="img-fluid logo-lg" alt="logo">
       </a>
     </div>
     <div class="navbar-content">
