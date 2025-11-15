@@ -1,8 +1,7 @@
 <?php
 $basePath = '../';
 include('../../connection.php');
-include('../layout/sidebar.php');
-include('../layout/navbar.php');
+
 
 if(!isset($_SESSION['user_name']))
 {
@@ -31,6 +30,8 @@ if(isset($_POST['statusId']) && $_POST['statusId'] != null){
     exit();
   
 }
+include('../layout/sidebar.php');
+include('../layout/navbar.php');
 $data=null;
 
 if(isset($_POST['update']) && isset( $_POST['id']) && $_POST['id']!= null){
