@@ -257,7 +257,7 @@ $sub_category=mysqli_query($conn,$query1);
                     </div>
                   </form>
               
-                </div>
+                </div>             
               </div>
             </div>
             <!-- end -->
