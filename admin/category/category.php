@@ -159,23 +159,20 @@ $category=mysqli_query($conn,$query1);
                             <div class="modal-dialog modal-dialog-centered">
                               <div class="modal-content">
                                 <form method="POST" action="category.php" style="display:inline;">
-
-                                <div class="modal-header">
-                                  <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category here</h1>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-
-                                <div class="modal-body">
-                                  <label class="form-label">Category</label>
-                                  <input type="hidden" class="form-control" name="id" aria-label="Username" value="<?php echo $row['id'] ?>" aria-describedby="basic-addon1">
-                                  <input type="text" class="form-control" name="name" value="<?php echo $row['name'] ?>" aria-label="Username" aria-describedby="basic-addon1">
-                                </div> 
-
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                  <button type="submit" class="btn btn-primary" name="update">Save Changes</button>
-                                </div>
-                                
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category here</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <label class="form-label">Category</label>
+                                    <input type="hidden" class="form-control" name="id" aria-label="Username" value="<?php echo $row['id'] ?>" aria-describedby="basic-addon1">
+                                    <input type="text" class="form-control" name="name" value="<?php echo $row['name'] ?>" aria-label="Username" aria-describedby="basic-addon1">
+                                  </div> 
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary" name="update">Save Changes</button>
+                                  </div>
+                                </form>                                
                               </div>
                             </div>
                           </div>

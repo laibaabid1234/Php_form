@@ -49,7 +49,7 @@ if(isset($_POST['update']) && isset( $_POST['id']) && $_POST['id']!= null){
       $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . '../uploads' . DIRECTORY_SEPARATOR;
       if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
       if (move_uploaded_file($tmp, $uploadDir . $newName)) {
-        $imagePath = '../uploads/' . $newName;
+        $imagePath = 'uploads/' . $newName;
       }
     }
   }
@@ -95,7 +95,7 @@ else if(isset($_POST['add']) && isset($_POST['p_name']) && $_POST['p_name']!= nu
       $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . '../uploads' . DIRECTORY_SEPARATOR;
       if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
       if (move_uploaded_file($tmp, $uploadDir . $newName)) {
-        $imagePath = '../uploads/' . $newName;
+        $imagePath = 'uploads/' . $newName;
       }
     }
   }
@@ -184,7 +184,7 @@ if (window.history.replaceState) {
                       <td><?php echo $row['p_price'] ?></td> 
                       <td><?php echo $row['cat_name'] ?></td> 
                       <td><?php echo $row['sub_name'] ?></td>  
-                      <td><img src="<?php echo $row['image']; ?>" alt="" width="100px" ></td>         
+                      <td><img src="../<?php echo $row['image']; ?>" alt="" width="100px" ></td>         
                       <td> 
                           <a href="edit_products.php?p_id=<?php echo $row['p_id'] ?>" class="btn btn-warning">Edit</a>
                           <form action="products.php" method="post" style="display:inline;">
@@ -239,7 +239,7 @@ if (window.history.replaceState) {
                       <td><?php echo $row['p_price'] ?></td> 
                       <td><?php echo $row['cat_name'] ?></td> 
                       <td><?php echo $row['sub_name'] ?></td>  
-                       <td><img src="<?php echo $row['image']; ?>" alt="" width="100px" ></td>        
+                       <td><img src="../<?php echo $row['image'] ?>" alt="" width="100px" ></td>        
                     </td> 
                     </tr>
                     <?php } ?>

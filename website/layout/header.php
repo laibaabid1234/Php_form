@@ -116,32 +116,28 @@ include('../connection.php');
                     <i class="fa fa-angle-down text-dark"></i>
                 </a>
                 <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light" id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999;">
-                    <div class="navbar-nav w-100">
-                        
-                            <?php 
-                                $sql = "SELECT id, name FROM category";  
-                                $result = $conn->query($sql);
-                                while ($row = $result->fetch_assoc()) {
-                                    $categoryId = $row['id'];
-                                    $categoryName = $row['name'];  ?>
-                            <div class="nav-item dropdown dropright">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><?php echo $categoryName; ?> <i class="fa fa-angle-right float-right mt-1"></i></a>
-                                    
-                                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                                <?php 
-                                        $subSql = "SELECT id, name FROM sub_category WHERE cat_id = $categoryId";
-                                        $subResult = $conn->query($subSql); 
-                                        
-                                        while ($subRow = $subResult->fetch_assoc()) {
-                                            $subCategoryId = $subRow['id'];
-                                            $subCategoryName = $subRow['name']; ?>
-                                                <a href="" class="dropdown-item"> <?php echo $subCategoryName ?></a>
-                                                  <?php } ?>
-                                                
-                                            </div>
-                                        </div>
-                                      
-                            <?php } ?>
+                    <div class="navbar-nav w-100">                      
+                        <?php 
+                        $sql = "SELECT id, name FROM category";  
+                        $result = $conn->query($sql);
+                        while ($row = $result->fetch_assoc()) {
+                        $categoryId = $row['id'];
+                        $categoryName = $row['name'];  ?>
+                        <div class="nav-item dropdown dropright">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><?php echo $categoryName; ?> <i class="fa fa-angle-right float-right mt-1"></i></a>                                    
+                        <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
+                        <?php 
+                        $subSql = "SELECT id, name FROM sub_category WHERE cat_id = $categoryId";
+                        $subResult = $conn->query($subSql);                                        
+                        while ($subRow = $subResult->fetch_assoc()) {
+                            $subCategoryId = $subRow['id'];
+                            $subCategoryName = $subRow['name'];
+                            echo '<a class="dropdown-item" href="categoryproducts.php?cat_id='.$categoryId.'&sub_cat='.$subCategoryId.'">'.$subCategoryName.'</a>';
+                        }                                    
+                        echo '</div>';
+                        echo '</div>';
+                        }
+                        ?>
                         
                         <!-- <a href="" class="nav-item nav-link">Shirts</a>
                         <a href="" class="nav-item nav-link">Jeans</a>
@@ -166,8 +162,20 @@ include('../connection.php');
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
-                            <a href="index.html" class="nav-item nav-link active">Home</a>
-                            <a href="shop.html" class="nav-item nav-link">Shop</a>
+                             <?php 
+                            $current_url = $_SERVER['REQUEST_URI'];
+                            if($current_url=="/php_form/website/index.php"){?>                      
+                                <a href="index.php" class="nav-item nav-link active">Home</a> 
+                            <?php } else { ?>
+                                <a href="index.php" class="nav-item nav-link">Home</a>
+                            <?php } ?>
+                            <?php 
+                            $current_url = $_SERVER['REQUEST_URI'];
+                            if($current_url=="/php_form/website/products.php"){?>                      
+                                <a href="products.php" class="nav-item nav-link active">Shop</a> 
+                            <?php } else { ?>
+                                <a href="products.php" class="nav-item nav-link">Shop</a>
+                            <?php } ?>
                             <a href="cart.html" class="nav-item nav-link">Shop Cart</a>
                             <a href="checkout.html" class="nav-item nav-link">Checkout</a>
                             <a href="contact.html" class="nav-item nav-link">Contact</a>

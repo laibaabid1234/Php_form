@@ -1,5 +1,5 @@
 <?php
-include('../connection.php');
+include('../../connection.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,8 +44,8 @@ include('../connection.php');
                 
                 while ($subRow = $subResult->fetch_assoc()) {
                   $subCategoryId = $subRow['id'];
-                    $subCategoryName = $subRow['name'];
-                    echo '<li><a class="dropdown-item" href="products.php?cat_id='.$categoryId.'?sub_cat='.$subCategoryId.'">'.$subCategoryName.'</a></li>';
+                  $subCategoryName = $subRow['name'];
+                  echo '<li><a class="dropdown-item" href="products.php?cat_id='.$categoryId.'?sub_cat='.$subCategoryId.'">'.$subCategoryName.'</a></li>';
                 }
 
                 echo '</ul>'; // close subcategory menu
