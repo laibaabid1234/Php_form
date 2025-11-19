@@ -13,9 +13,6 @@ if(isset($_GET['id'])&& $_GET['id']!=null)
     $user=mysqli_query($conn,$query);
     $editrow=mysqli_fetch_assoc($user);
 }
-if ($_SESSION['user_role'] != "admin"){
-header("Location: form.php");
-}
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
 echo "<script>

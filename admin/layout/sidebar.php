@@ -54,7 +54,7 @@
 <nav class="pc-sidebar">
   <div class="navbar-wrapper">
     <div class="m-header">
-      <a href="<?php echo $basePath; ?>users/form.php" class="b-brand text-primary">
+      <a href="<?php echo $basePath; ?>dashboard.php" class="b-brand text-primary">
         <!-- ========   Change your logo from here   ============ -->
          <?php $current_url = $_SERVER['REQUEST_URI'];
         if($current_url=="/php_form/admin/dashboard.php"){?>
@@ -66,14 +66,12 @@
     </div>
     <div class="navbar-content">
       <ul class="pc-navbar">
-    <?php if ($_SESSION['user_role'] == "admin"){ ?>
         <li class="pc-item">
           <a href="<?php echo $basePath; ?>dashboard.php" class="pc-link">
             <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
             <span class="pc-mtext">Dashboard</span>
           </a>
         </li>
-        <?php } ?>
       
         <li class="pc-item">
           <a href="<?php echo $basePath; ?>users/form.php" class="pc-link">

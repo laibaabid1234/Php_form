@@ -7,10 +7,7 @@
   {
       header("Location: ../../login.php");
       exit();
-  }
-  if($_SESSION['user_role'] != "admin"){
-  header("Location: form.php");
-  }  
+  } 
   
   if(isset($_POST['cat_id']) && $_POST['cat_id'] != null){
        $cat_id = $_POST['cat_id'];

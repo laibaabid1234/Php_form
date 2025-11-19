@@ -137,8 +137,6 @@ if (window.history.replaceState) {
 
         <!-- [ Main Content ] start -->
         <div class="row">
-
-         <?php if ($_SESSION['user_role'] == "admin"){ ?>
             <?Php if(isset($data)&& $data!=null){?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                   <?php echo $msg ?>
@@ -208,48 +206,6 @@ if (window.history.replaceState) {
             </div>
           </div>
           <!-- Zero config table end -->
-
-          <?php }else{ ?>
-          <!-- Zero config table start -->
-          <div class="col-sm-12">
-            <div class="card">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-3">products Table</h5>
-              </div>
-
-            <!-- Table start -->
-              <div class="card-body">
-                <div class="dt-responsive table-responsive">
-                  <table id="simpletable" class="table table-striped table-bordered nowrap">
-                    <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Category Name</th>
-                        <th>Sub Category Name</th>
-                        <th>Image</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    <?php while($row=mysqli_fetch_assoc($products)){  ?>
-                    <tr>
-                      <td><?php echo $row['p_id'] ?></td>
-                      <td><?php echo $row['p_name'] ?></td> 
-                      <td><?php echo $row['p_price'] ?></td> 
-                      <td><?php echo $row['cat_name'] ?></td> 
-                      <td><?php echo $row['sub_name'] ?></td>  
-                       <td><img src="../<?php echo $row['image'] ?>" alt="" width="100px" ></td>        
-                    </td> 
-                    </tr>
-                    <?php } ?>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-            <?php }?>
 <script>
    $(document).ready(function(){
     $('.toggle').change(function(){

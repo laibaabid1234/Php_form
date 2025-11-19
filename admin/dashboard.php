@@ -5,9 +5,6 @@ if(!isset($_SESSION['user_name']))
     header("Location: ../login.php");
     exit();
 }
-if ($_SESSION['user_role'] != "admin"){
-header("Location: users/form.php");
-}
 $basePath = null;
 include('layout/sidebar.php');
 include('layout/navbar.php');

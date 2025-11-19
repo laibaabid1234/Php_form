@@ -94,8 +94,6 @@ $category=mysqli_query($conn,$query1);
 
         <!-- [ Main Content ] start -->
         <div class="row">
-
-         <?php if ($_SESSION['user_role'] == "admin"){ ?>
             <?Php if(isset($data)&& $data!=null){?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                   <?php echo $msg ?>
@@ -213,43 +211,6 @@ $category=mysqli_query($conn,$query1);
               </div>
             </div>
             <!-- end -->
-
-            
-
-          <?php }else{ ?>
-          <!-- Zero config table start -->
-          <div class="col-sm-12">
-            <div class="card">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-3">Category Table</h5>
-              </div>
-
-            <!-- Table start -->
-              <div class="card-body">
-                <div class="dt-responsive table-responsive">
-                  <table id="simpletable" class="table table-striped table-bordered nowrap">
-                    <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    <?php while($row=mysqli_fetch_assoc($category)){  ?>
-                    <tr>
-                      <td><?php echo $row['id'] ?></td>
-                      <td><?php echo $row['name'] ?></td>            
-                    </td> 
-                    </tr>
-                    <?php } ?>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-            <?php }?> 
-
 
 <script>
    $(document).ready(function(){

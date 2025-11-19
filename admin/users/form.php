@@ -129,7 +129,6 @@ $users=mysqli_query($conn,$query1);
         <!-- [ Main Content ] start -->
 
         <div class="row">
-         <?php if ($_SESSION['user_role'] == "admin"){ ?>
             <?Php if(isset($data)&& $data!=null){?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                   <?php echo $msg ?>
@@ -188,46 +187,6 @@ $users=mysqli_query($conn,$query1);
             </div>
           </div>
           <!-- Zero config table end -->
-           
-           <?php }else{ ?>
-             <!-- Zero config table start -->
-          <div class="col-sm-12">
-            <div class="card">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-3">Users Table</h5>
-              </div>
-
-              <div class="card-body">
-                <div class="dt-responsive table-responsive">
-                  <table id="simpletable" class="table table-striped table-bordered nowrap">
-                    <thead>
-                      <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Contact</th>
-                        <th>Image</th>                       
-                      </tr>
-                    </thead>
-                    <tbody>
-                       <?php while($row=mysqli_fetch_assoc($users)){  ?>
-                            <tr>
-                                <td><?php echo $row['id'] ?></td>
-                                <td><?php echo $row['name'] ?></td>
-                                <td><?php echo $row['email'] ?></td>
-                                <td><?php echo $row['contact'] ?></td>
-                                <td><img src="../<?php echo $row['image']; ?>" alt="" width="100px"></td>
-
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div> <?php } ?>
-           
-
         
 <?php
 include('../layout/footer.php');
