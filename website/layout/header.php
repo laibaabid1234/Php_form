@@ -162,23 +162,42 @@ include('../connection.php');
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
-                             <?php 
+                            <?php 
                             $current_url = $_SERVER['REQUEST_URI'];
-                            if($current_url=="/php_form/website/index.php"){?>                      
-                                <a href="index.php" class="nav-item nav-link active">Home</a> 
-                            <?php } else { ?>
-                                <a href="index.php" class="nav-item nav-link">Home</a>
+                                if($current_url=="/php_form/website/index.php"){?>                      
+                                    <a href="index.php" class="nav-item nav-link active">Home</a> 
+                                <?php } else { ?>
+                                    <a href="index.php" class="nav-item nav-link">Home</a>
                             <?php } ?>
                             <?php 
                             $current_url = $_SERVER['REQUEST_URI'];
-                            if($current_url=="/php_form/website/products.php"){?>                      
-                                <a href="products.php" class="nav-item nav-link active">Shop</a> 
-                            <?php } else { ?>
-                                <a href="products.php" class="nav-item nav-link">Shop</a>
+                                if($current_url=="/php_form/website/products.php"){?>                      
+                                    <a href="products.php" class="nav-item nav-link active">Shop</a> 
+                                <?php } else { ?>
+                                    <a href="products.php" class="nav-item nav-link">Shop</a>
                             <?php } ?>
-                            <a href="cart.html" class="nav-item nav-link">Shop Cart</a>
-                            <a href="checkout.html" class="nav-item nav-link">Checkout</a>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                             <?php 
+                            $current_url = $_SERVER['REQUEST_URI'];
+                                if($current_url=="/php_form/website/cart.php"){?>                      
+                                    <a href="cart.php" class="nav-item nav-link active">Shop Cart</a> 
+                                <?php } else { ?>
+                                    <a href="cart.php" class="nav-item nav-link">Shop Cart</a>
+                            <?php } ?>
+                            <?php 
+                            $current_url = $_SERVER['REQUEST_URI'];
+                                if($current_url=="/php_form/website/checkout.php"){?>                      
+                                    <a href="checkout.php" class="nav-item nav-link active">Checkout</a> 
+                                <?php } else { ?>
+                                    <a href="checkout.php" class="nav-item nav-link">Checkout</a>
+                            <?php } ?>
+                            
+                           <?php 
+                            $current_url = $_SERVER['REQUEST_URI'];
+                                if($current_url=="/php_form/website/contact.php"){?>                      
+                                    <a href="contact.php" class="nav-item nav-link active">Contact</a> 
+                                <?php } else { ?>
+                                    <a href="contact.php" class="nav-item nav-link">Contact</a>
+                            <?php } ?>
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                             <a href="" class="btn px-0">

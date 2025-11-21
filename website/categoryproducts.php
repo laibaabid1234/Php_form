@@ -7,6 +7,11 @@
     $query="SELECT * FROM products WHERE cat_id= $catid AND subcat_id= $subid ";
     $result=mysqli_query($conn,$query);   
 }
+elseif(isset($_GET['cat_id'])&& $_GET['cat_id']!=null){
+    $catid=$_GET['cat_id'];
+    $query="SELECT * FROM products WHERE cat_id= $catid";
+    $result=mysqli_query($conn,$query);   
+}
  ?>
  <!-- Shop Start -->
     <div class="container-fluid">
