@@ -32,7 +32,12 @@ if(isset($_POST['login'])){
                       $_SESSION['email']=$row['email'];
                       $_SESSION['password']=$row['password'];
                       $_SESSION['user_role'] = $row['user_role'];
+                      if($_SESSION['user_role']=='admin'){
+                        
                       header("Location: admin/dashboard.php"); 
+                    }else{
+                      header("Location: website/index.php"); 
+                    }
                       exit();
                    }
                    else{

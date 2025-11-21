@@ -27,6 +27,8 @@ include('../connection.php');
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="assets/css/style.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -74,7 +76,9 @@ include('../connection.php');
                     </a>
                     <a href="" class="btn px-0 ml-2">
                         <i class="fas fa-shopping-cart text-dark"></i>
-                        <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">0</span>
+                        <span class="badge text-dark border border-dark rounded-circle" style="padding-bottom: 2px;">
+                           0
+                        </span>
                     </a>
                 </div>
             </div>
@@ -176,13 +180,7 @@ include('../connection.php');
                                 <?php } else { ?>
                                     <a href="products.php" class="nav-item nav-link">Shop</a>
                             <?php } ?>
-                             <?php 
-                            $current_url = $_SERVER['REQUEST_URI'];
-                                if($current_url=="/php_form/website/cart.php"){?>                      
-                                    <a href="cart.php" class="nav-item nav-link active">Shop Cart</a> 
-                                <?php } else { ?>
-                                    <a href="cart.php" class="nav-item nav-link">Shop Cart</a>
-                            <?php } ?>
+
                             <?php 
                             $current_url = $_SERVER['REQUEST_URI'];
                                 if($current_url=="/php_form/website/checkout.php"){?>                      
@@ -204,9 +202,21 @@ include('../connection.php');
                                 <i class="fas fa-heart text-primary"></i>
                                 <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
                             </a>
-                            <a href="" class="btn px-0 ml-3">
+                            <a href="shop.php" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                <span class="badge text-secondary border border-secondary rounded-circle" id="cartCount" style="padding-bottom: 2px;">
+                                     <?php
+                                        $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+                                        if($user_id){  
+                                            $cartCountQuery = "SELECT COUNT(*) AS count FROM cart WHERE user_id='$user_id'";
+                                            $cartCountResult = mysqli_query($conn, $cartCountQuery);
+                                            $cartCountRow = mysqli_fetch_assoc($cartCountResult);
+                                            echo $cartCountRow['count'];
+                                        } else {
+                                            echo "0";
+                                        }
+                                    ?>
+                                </span>
                             </a>
                         </div>
                     </div>
