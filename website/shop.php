@@ -17,11 +17,12 @@ include('layout/header.php');
                     </thead>
                     <tbody class="align-middle">
                         <?php 
-                        $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id, products.p_name as name, products.p_price as price,products.image as image  from cart inner join products on cart.product_id=products.id where cart.user_id='$_SESSION[id]'";
+                        $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,cart.total as total, products.p_name as name, products.p_price as price,products.image as image  from cart inner join products on cart.product_id=products.id where cart.user_id='$_SESSION[id]'";
                         $cartResult = mysqli_query($conn, $cartQuery);
                         while($cartRow = mysqli_fetch_assoc($cartResult)){
                             
                             $productQuantity = $cartRow['quantity'];
+                            $total= $cartRow['total'];
                             $productId = $cartRow['product_id'];
                             $productName = $cartRow['name'];
                             $productPrice = $cartRow['price'];   
@@ -39,7 +40,7 @@ include('layout/header.php');
                                         <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center p_quantity" value="1">
+                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center p_quantity" value="<?php echo $productQuantity; ?>">
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-primary btn-plus">
                                             <i class="fa fa-plus"></i>
@@ -47,7 +48,7 @@ include('layout/header.php');
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle total_amount"><?php echo $productPrice ?></td>
+                            <td class="align-middle total_amount"><?php echo $total ?></td>
                             <td class="align-middle"><button class="btn btn-sm btn-danger" data-id="<?php echo $cartid ?>"><i class="fa fa-times"></i></button></td>
                         </tr>
 
@@ -70,19 +71,19 @@ include('layout/header.php');
                     <div class="border-bottom pb-2">
                         <div class="d-flex justify-content-between mb-3">
                             <h6>Subtotal</h6>
-                            <h6>$150</h6>
+                            <h6 id="subtotal"></h6>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">$10</h6>
+                            <h6 class="font-weight-medium">10% Tax</h6>
+                            <h6 class="font-weight-medium" id="tax"></h6>
                         </div>
                     </div>
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
-                            <h5>$160</h5>
+                            <h5 id="total"></h5>
                         </div>
-                        <button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button>
+                        <a class="btn btn-block btn-primary font-weight-bold my-3 py-3" href="checkout.php">Proceed To Checkout</a>
                     </div>
                 </div>
             </div>
@@ -92,6 +93,23 @@ include('layout/header.php');
 
     <script>
     $(document).ready(function(){
+
+        var subtotal=0;
+        function calculateTotals(){
+            subtotal = 0;
+            $(".total_amount").each(function(){
+                var amount = parseFloat($(this).text());
+                subtotal += amount;
+            });
+            $("#subtotal").text(subtotal.toFixed(2));
+            var tax = subtotal * 0.10;
+            $("#tax").text(tax.toFixed(2));
+            var total = subtotal + tax;
+            $("#total").text(total.toFixed(2));
+        }
+        calculateTotals();
+
+
        $(".btn-plus").on('click', function(){
             var quantityInput = $(this).closest(".quantity").find(".p_quantity");
             var currentQuantity = parseInt(quantityInput.val());
@@ -107,14 +125,36 @@ include('layout/header.php');
         });
 
 
-
+        
         $(".p_quantity").on('change', function(){
             var quantity = $(this).val();
             var price = $(this).closest("tr").find(".price").text();
             price = parseFloat(price);
+            alert(price);
             quantity = parseInt(quantity);
             var total = quantity * price;
             $(this).closest("tr").find(".total_amount").text(total);
+            calculateTotals();
+
+             $.ajax({
+                url: 'add_to_cart.php',
+                type: 'post',
+                data: {
+                    productQuantity: quantity,
+                    price: price,
+                    product_Id: $(this).closest("tr").find(".btn-danger").data("id"),
+                    cartUpdate: true
+                },
+                success: function(response){
+                    response = JSON.parse(response);
+                    if(response.status === 'success'){
+                        console.log('Cart updated successfully');
+                    } else {
+                        alert(response.message);
+                    }
+                }
+             });
+            
         });
 
 
@@ -132,6 +172,7 @@ include('layout/header.php');
                         row.remove();
                         $("#cartCount").text(response.cart_count);
                         alert(response.message);
+                         calculateTotals();
                     } else {
                         alert(response.message);
                     }

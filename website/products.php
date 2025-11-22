@@ -166,7 +166,7 @@
                             <div class="product-img position-relative overflow-hidden">
                                 <img class="img-fluid" src="../admin/<?php echo $productImage ?>" alt="" style="width:100%; height:250px; object-fit:cover;">
                                 <div class="product-action">
-                                    <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" ><i class="fa fa-shopping-cart"></i></a>
+                                    <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" ><i class="fa fa-shopping-cart"></i></a>
                                     <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
                                     <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
                                     <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
@@ -213,10 +213,11 @@
     $(document).ready(function(){
         $(".add_to_cart").click(function(){
             var productId = $(this).data("id");
+            var productPrice = $(this).data("price");
             $.ajax({
                 url: 'add_to_cart.php',
                 type: 'post',
-                data: {productId: productId},
+                data: {productId: productId, price: productPrice},
                 success: function(response){
                     response = JSON.parse(response);
                     alert(response.message);
