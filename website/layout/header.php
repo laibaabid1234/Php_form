@@ -132,7 +132,7 @@ include('../connection.php');
                         while ($subRow = $subResult->fetch_assoc()) {
                             $subCategoryId = $subRow['id'];
                             $subCategoryName = $subRow['name'];
-                            echo '<a class="dropdown-item" href="categoryproducts.php?cat_id='.$categoryId.'&sub_cat='.$subCategoryId.'">'.$subCategoryName.'</a>';
+                            echo '<a class="dropdown-item" href="products.php?cat_id='.$categoryId.'&sub_cat='.$subCategoryId.'">'.$subCategoryName.'</a>';
                         }                                    
                         echo '</div>';
                         echo '</div>';

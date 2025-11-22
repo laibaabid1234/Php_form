@@ -25,7 +25,7 @@ include('layout/header.php');
                                 <div class="p-3" style="max-width: 700px;">
                                     <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown"><?php echo $categoryName;?></h1>
                                     <?php 
-                                  echo '<a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="categoryproducts.php?cat_id='.$categoryId.'">Shop Now</a>';
+                                  echo '<a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="products.php?cat_id='.$categoryId.'">Shop Now</a>';
                                 echo '</div>';
                             echo '</div>';
                        echo '</div>';

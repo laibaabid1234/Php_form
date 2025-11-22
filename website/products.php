@@ -1,5 +1,21 @@
  <?php 
  include ('layout/header.php');
+ if(isset($_GET['cat_id'])&& $_GET['cat_id']!=null && isset($_GET['sub_cat']) && $_GET['sub_cat']!=null)
+{
+    $catid=$_GET['cat_id'];
+    $subid=$_GET['sub_cat'];
+    $query="SELECT * FROM products WHERE cat_id= $catid AND subcat_id= $subid ";
+    $result=mysqli_query($conn,$query);   
+}
+elseif(isset($_GET['cat_id'])&& $_GET['cat_id']!=null){
+    $catid=$_GET['cat_id'];
+    $query="SELECT * FROM products WHERE cat_id= $catid";
+    $result=mysqli_query($conn,$query);   
+}
+else{
+    $sql="SELECT id, p_name, p_price, image from products";
+    $result = $conn->query($sql);
+}
  ?>
  <!-- Shop Start -->
     <div class="container-fluid">
@@ -152,14 +168,13 @@
                             </div>
                         </div>
                     </div>
-                    <?php 
-                    $sql="SELECT id, p_name, p_price, image from products";
-                    $result = $conn->query($sql);
-                        while ($row = $result->fetch_assoc()) {
-                            $productId = $row['id'];
-                            $productName = $row['p_name'];  
-                            $productPrice = $row['p_price'];
-                            $productImage = $row['image']; 
+                    <?php   
+                    if($result && mysqli_num_rows($result)>0){
+                         while ($editrow = $result->fetch_assoc()) {
+                            $productId = $editrow['id'];
+                            $productName = $editrow['p_name'];  
+                            $productPrice = $editrow['p_price'];
+                            $productImage = $editrow['image'];                                             
                     ?>
                     <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
                         <div class="product-item bg-light mb-4">
@@ -188,6 +203,7 @@
                             </div>
                         </div>
                     </div>
+                    <?php } ?>
                     <?php } ?>
             
                     <div class="col-12">
