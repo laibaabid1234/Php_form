@@ -198,9 +198,20 @@ include('../connection.php');
                             <?php } ?>
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                            <a href="" class="btn px-0">
+                            <a href="wishlist.php" class="btn px-0">
                                 <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;">0</span>
+                                <span id="wishlist_count" class="badge text-secondary border border-secondary rounded-circle" style="padding-bottom: 2px;"><?php
+                                        $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+                                        if($user_id){  
+                                            $wishlistCountQuery = "SELECT COUNT(*) AS count FROM wishlist WHERE user_id='$user_id'";
+                                            $wishlistCountResult = mysqli_query($conn, $wishlistCountQuery);
+                                            $wishlistCountRow = mysqli_fetch_assoc($wishlistCountResult);
+                                            echo $wishlistCountRow['count'];
+                                        } else {
+                                            echo "0";
+                                        }
+                                    ?>
+                                    </span>
                             </a>
                             <a href="shop.php" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>

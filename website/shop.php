@@ -179,6 +179,7 @@ include('layout/header.php');
                 }
             });
         });
+        
     });
     </script>
  <?php 
