@@ -35,7 +35,27 @@ $data=null;
 if(isset($_POST['update']) && isset( $_POST['id']) && $_POST['id']!= null){
     $id=$_POST['id'];
     $name=$_POST['name'];
+    $imagePath=null;
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $tmp = $_FILES['image']['tmp_name'];
+    $origName = basename($_FILES['image']['name']);
+    $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+    $allowed = array('jpg','jpeg','png','gif');
+    if (in_array($ext, $allowed) && @getimagesize($tmp)) {
+      $newName = uniqid('img_', true) . '.' . $ext;
+      $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . '../uploads' . DIRECTORY_SEPARATOR;
+      if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+      if (move_uploaded_file($tmp, $uploadDir . $newName)) {
+        $imagePath = 'uploads/' . $newName;
+      }
+    }
+  }
+  if ($imagePath) { 
+    $query="update category set name='$name',image='$imagePath' where id='$id'";
+  }
+  else{
     $query="update category set name='$name' where id='$id'";
+  } 
     $data=mysqli_query($conn,$query);
    if($data){
        $msg="Changes Saved!";
@@ -57,16 +77,35 @@ else if (isset($_POST['delete']) && isset($_POST['id']) && $_POST['id'] != null)
     }
 }
 else if(isset($_POST['add']) && isset($_POST['name']) && $_POST['name']!= null){
-    $name=$_POST['name'];
+    $name = $_POST['name'];
+    $imagePath = null;
+
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $tmp = $_FILES['image']['tmp_name'];
+    $origName = basename($_FILES['image']['name']);
+    $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
+    $allowed = array('jpg','jpeg','png','gif');
+    if (in_array($ext, $allowed) && @getimagesize($tmp)) {
+      $newName = uniqid('img_', true) . '.' . $ext;
+      $uploadDir = __DIR__ . DIRECTORY_SEPARATOR . '../uploads' . DIRECTORY_SEPARATOR;
+      if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+      if (move_uploaded_file($tmp, $uploadDir . $newName)) {
+        $imagePath = 'uploads/' . $newName;
+      }
+    }
+  }
+  if ($imagePath) {
+    $query = "INSERT INTO category (name,image) VALUES ('$name','$imagePath')";
+  }
+  else{
     $query = "INSERT INTO category (name) VALUES ('$name')";
+  }
     $data=mysqli_query($conn,$query);
     if($data)
     {
         $msg="New record has been submitted";
     }
 }
-
-
 
 echo "<script>
 if (window.history.replaceState) {
@@ -129,6 +168,7 @@ $category=mysqli_query($conn,$query1);
                         <th>Name</th>
                         <th>Actions</th>
                         <th>Status</th>
+                        <th>Image</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -151,12 +191,13 @@ $category=mysqli_query($conn,$query1);
                             <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch" id="myToggleSwitch">                                              
                           </div>                                                              
                        </td>
+                       <td><img src="../<?php echo $row['image']; ?>" alt="" width="100px" ></td>
                     </tr>
                     <!-- edit modal start -->
                             <div class="modal fade" id="editModal_<?php echo $row['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                               <div class="modal-content">
-                                <form method="POST" action="category.php" style="display:inline;">
+                                <form method="POST" action="category.php" style="display:inline;" enctype="multipart/form-data">
                                   <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category here</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -166,6 +207,10 @@ $category=mysqli_query($conn,$query1);
                                     <input type="hidden" class="form-control" name="id" aria-label="Username" value="<?php echo $row['id'] ?>" aria-describedby="basic-addon1">
                                     <input type="text" class="form-control" name="name" value="<?php echo $row['name'] ?>" aria-label="Username" aria-describedby="basic-addon1">
                                   </div> 
+                                  <div class="modal-body">
+                                  <label class="form-label">Category Image</label>
+                                  <input type="file" class="form-control" name="image" aria-describedby="basic-addon1">
+                                  </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary" name="update">Save Changes</button>
@@ -190,7 +235,7 @@ $category=mysqli_query($conn,$query1);
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                 
-                <form action="category.php" method="post">
+                <form action="category.php" method="post" enctype="multipart/form-data">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category here</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -200,7 +245,10 @@ $category=mysqli_query($conn,$query1);
                     <input type="hidden" class="form-control" name="id" aria-label="Username" aria-describedby="basic-addon1">
                     <input type="text" class="form-control" name="name" placeholder="Enter your Category" aria-label="Username" aria-describedby="basic-addon1">
                   </div>
-
+                  <div class="modal-body">
+                    <label class="form-label">Category Image</label>
+                    <input type="file" class="form-control" name="image" aria-describedby="basic-addon1">
+                  </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" name="add">Submit</button>

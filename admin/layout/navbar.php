@@ -98,7 +98,7 @@ $imagePath=$row['image'];
            <i class="ti ti-user"></i>
               <span>Profile</span>
             </a>
-            <a href="../../logout.php" class="dropdown-item">
+            <a href="../logout.php" class="dropdown-item">
               <i class="ti ti-power"></i>
               <span>Logout</span>
             </a>

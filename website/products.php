@@ -13,7 +13,7 @@ elseif(isset($_GET['cat_id'])&& $_GET['cat_id']!=null){
     $result=mysqli_query($conn,$query);   
 }
 else{
-    $sql="SELECT id, p_name, p_price, image from products";
+    $sql="SELECT id, p_name, p_price, image, status from products";
     $result = $conn->query($sql);
 }
  ?>
@@ -174,7 +174,7 @@ else{
                             $productId = $editrow['id'];
                             $productName = $editrow['p_name'];  
                             $productPrice = $editrow['p_price'];
-                            $productImage = $editrow['image'];                                             
+                            $productImage = $editrow['image'];                                           
                     ?>
                     <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
                         <div class="product-item bg-light mb-4">
@@ -182,9 +182,9 @@ else{
                                 <img class="img-fluid" src="../admin/<?php echo $productImage ?>" alt="" style="width:100%; height:250px; object-fit:cover;">
                                 <div class="product-action">
                                     <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" ><i class="fa fa-shopping-cart"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+                                    <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>"><i class="far fa-heart"></i></a>
+                                    <!-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
+                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a> -->
                                 </div>
                             </div>
                             <div class="text-center py-4">
@@ -240,6 +240,28 @@ else{
 
                     if(response.status === 'success'){
                     $("#cartCount").text(response.cart_count);
+                    }
+                }
+            });
+        });
+    });
+  </script>
+
+   <script>
+    $(document).ready(function(){
+        $(".add_to_wishlist").click(function(){
+            var productId = $(this).data("id");
+            var productPrice = $(this).data("price");
+            $.ajax({
+                url: 'add_to_wishlist.php', 
+                type: 'post',
+                data: {productId: productId, price: productPrice},
+                success: function(response){
+                    response = JSON.parse(response);
+                    alert(response.message);
+
+                    if(response.status === 'success'){
+                    $("#wishlist_count").text(response.wishlist_count);
                     }
                 }
             });
