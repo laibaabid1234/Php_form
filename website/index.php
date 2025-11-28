@@ -13,14 +13,16 @@ include('layout/header.php');
                     </ol>    
                     <div class="carousel-inner">
                         <?php 
-                        $sql = "SELECT id, name FROM category";  
+                        $sql = "SELECT id, name,image FROM category";  
                         $result = $conn->query($sql);
                         $active = "active"; 
                         while ($row = $result->fetch_assoc()) {
                         $categoryId = $row['id'];
-                        $categoryName = $row['name'];  ?>
+                        $categoryName = $row['name'];
+                        $categoryimage = $row['image']; 
+                        ?>
                         <div class="carousel-item position-relative <?php echo $active; ?>" style="height: 430px;">
-                            <img class="position-absolute w-100 h-100" src="assets/img/carousel.jpg" style="object-fit: cover;">
+                            <img class="position-absolute w-100 h-100" src="../admin/<?php echo $categoryimage;?>" style="object-fit: cover;">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
                                     <h1 class="display-4 text-white mb-3 animate__animated animate__fadeInDown"><?php echo $categoryName;?></h1>
