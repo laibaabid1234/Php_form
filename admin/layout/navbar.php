@@ -98,10 +98,17 @@ $imagePath=$row['image'];
            <i class="ti ti-user"></i>
               <span>Profile</span>
             </a>
+            <?php if($current_url=="/php_form/admin/dashboard.php"){?>
             <a href="../logout.php" class="dropdown-item">
               <i class="ti ti-power"></i>
               <span>Logout</span>
             </a>
+            <?php } else {?>
+            <a href="../../logout.php" class="dropdown-item">
+              <i class="ti ti-power"></i>
+              <span>Logout</span>   
+            </a>
+            <?php } ?>
           </div>
         </div>
         <!-- Dropdown end -->

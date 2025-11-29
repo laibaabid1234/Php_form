@@ -46,14 +46,21 @@ if(isset($_POST['subtotal']) && isset($_POST['tax']) && isset($_POST['total'])){
 
             $quantity = $quantities[$index];
             $total    = $totals[$index];
-
             $orderItemsQuery = "INSERT INTO order_items (order_id, product_id, quantity, total)
                                 VALUES ('$order_id', '$product_id', '$quantity', '$total')";
             mysqli_query($conn, $orderItemsQuery);
+            $product = mysqli_query($conn, "SELECT remaining FROM products WHERE id='$product_id'");
+            $productData = mysqli_fetch_assoc($product);
+            $remainingQuantity = $productData['remaining'];
+            $newRemainingQuantity = $remainingQuantity - $quantity;
+            $updateProductQuery = "UPDATE products SET remaining='$newRemainingQuantity' WHERE id='$product_id'";
+            mysqli_query($conn, $updateProductQuery);
+
         }
 
         $clearCartQuery = "DELETE FROM cart WHERE user_id='$user_id'";
         mysqli_query($conn, $clearCartQuery);
+
     
     } 
     $message = "Order placed successfully!";

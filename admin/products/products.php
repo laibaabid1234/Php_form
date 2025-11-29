@@ -5,6 +5,11 @@ if(!isset($_SESSION['user_name']))
     header("Location: ../../login.php");
     exit();
 }
+if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'admin')
+{
+    header("Location: ../../website/index.php");
+    exit();
+}
 if(isset($_POST['statusId']) && $_POST['statusId'] != null){
     $Id = $_POST['statusId'];
     $productStatusQuery = "SELECT status FROM products WHERE id = $Id";
@@ -36,6 +41,7 @@ if(isset($_POST['update']) && isset( $_POST['id']) && $_POST['id']!= null){
     $id=$_POST['id'];
     $name=$_POST['p_name'];
     $price=$_POST['p_price'];
+    $quantity=$_POST['quantity'];
     $cat_id=$_POST['cat_id'];
     $subcat_id=$_POST['subcat_id'];
     $imagePath=null;
@@ -54,10 +60,10 @@ if(isset($_POST['update']) && isset( $_POST['id']) && $_POST['id']!= null){
     }
   }
   if ($imagePath) { 
-    $query="update products set p_name='$name', p_price='$price', cat_id='$cat_id', subcat_id='$subcat_id',image='$imagePath' where id='$id'";
+    $query="update products set p_name='$name', p_price='$price', cat_id='$cat_id', subcat_id='$subcat_id',image='$imagePath',quantity='$quantity',remaining='$quantity' where id='$id'";
   }
   else{
-    $query="update products set p_name='$name', p_price='$price', cat_id='$cat_id', subcat_id='$subcat_id' where id='$id'";
+    $query="update products set p_name='$name', p_price='$price', cat_id='$cat_id', subcat_id='$subcat_id',quantity='$quantity',remaining='$quantity' where id='$id'";
   } 
    $data=mysqli_query($conn,$query);
    if($data){
@@ -82,6 +88,7 @@ else if (isset($_POST['delete']) && isset($_POST['id']) && $_POST['id'] != null)
 else if(isset($_POST['add']) && isset($_POST['p_name']) && $_POST['p_name']!= null){
     $name=$_POST['p_name'];
     $price=$_POST['p_price'];
+    $quantity=$_POST['quantity'];
     $cat_id=$_POST['cat_id'];
     $subcat_id=$_POST['subcat_id'];
     $imagePath=null;
@@ -100,9 +107,9 @@ else if(isset($_POST['add']) && isset($_POST['p_name']) && $_POST['p_name']!= nu
     }
   }
   if ($imagePath) {
-    $query = "INSERT INTO products (p_name, p_price,cat_id,subcat_id,image) VALUES ('$name', '$price','$cat_id','$subcat_id','$imagePath')";
+    $query = "INSERT INTO products (p_name, p_price,cat_id,subcat_id,image,quantity,remaining) VALUES ('$name', '$price','$cat_id','$subcat_id','$imagePath','$quantity','$quantity')";
   } else {
-    $query = "INSERT INTO products (p_name, p_price,cat_id,subcat_id) VALUES ('$name', '$price','$cat_id','$subcat_id')";
+    $query = "INSERT INTO products (p_name, p_price,cat_id,subcat_id,quantity,remianing) VALUES ('$name', '$price','$cat_id','$subcat_id','$quantity','$quantity')";
   }
     $data=mysqli_query($conn,$query);
     if($data)

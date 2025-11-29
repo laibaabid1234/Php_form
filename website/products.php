@@ -1,19 +1,40 @@
  <?php 
  include ('layout/header.php');
+
+
+$limit = 6;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start_from = ($page - 1) * $limit;
+
  if(isset($_GET['cat_id'])&& $_GET['cat_id']!=null && isset($_GET['sub_cat']) && $_GET['sub_cat']!=null)
 {
     $catid=$_GET['cat_id'];
     $subid=$_GET['sub_cat'];
-    $query="SELECT * FROM products WHERE cat_id= $catid AND subcat_id= $subid ";
+    $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid AND subcat_id= $subid ";
+    $count_result = mysqli_query($conn, $countquery);
+    $count_row = mysqli_fetch_assoc($count_result);
+    $total_records = $count_row['id'];
+    $total_pages = ceil($total_records / $limit);
+    $query="SELECT * FROM products WHERE cat_id= $catid AND subcat_id= $subid limit $start_from, $limit";
     $result=mysqli_query($conn,$query);   
 }
 elseif(isset($_GET['cat_id'])&& $_GET['cat_id']!=null){
     $catid=$_GET['cat_id'];
-    $query="SELECT * FROM products WHERE cat_id= $catid";
+    $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid";
+    $count_result = mysqli_query($conn, $countquery);   
+    $count_row = mysqli_fetch_assoc($count_result);
+    $total_records = $count_row['id'];
+    $total_pages = ceil($total_records / $limit);
+    $query="SELECT * FROM products WHERE cat_id= $catid limit $start_from, $limit";
     $result=mysqli_query($conn,$query);   
 }
 else{
-    $sql="SELECT id, p_name, p_price, image, status from products";
+        $total_query = "SELECT COUNT(id) AS id FROM products";
+        $total_result = mysqli_query($conn, $total_query);
+        $total_row = mysqli_fetch_assoc($total_result);
+        $total_records = $total_row['id'];
+        $total_pages = ceil($total_records / $limit);
+    $sql="SELECT id, p_name, p_price, image, status from products limit $start_from, $limit";
     $result = $conn->query($sql);
 }
  ?>
@@ -205,18 +226,56 @@ else{
                     </div>
                     <?php } ?>
                     <?php } ?>
-            
+                    <?php if($total_pages > 1){ ?>
                     <div class="col-12">
                         <nav>
-                          <ul class="pagination justify-content-center">
-                            <li class="page-item disabled"><a class="page-link" href="#">Previous</span></a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                          </ul>
+                           <ul class="pagination justify-content-center">
+
+                                <?php
+                                
+                                $filters = "";
+                                if(isset($_GET['cat_id']) && $_GET['cat_id'] != null){
+                                    $filters .= "&cat_id=" . $_GET['cat_id'];
+                                }
+                                if(isset($_GET['sub_cat']) && $_GET['sub_cat'] != null){
+                                    $filters .= "&sub_cat=" . $_GET['sub_cat'];
+                                }
+                                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                                ?>
+
+                                <!-- Previous Button -->
+                                <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                                    <a class="page-link"
+                                    href="products.php?page=<?php echo ($page - 1) . $filters; ?>">
+                                    Previous
+                                    </a>
+                                </li>
+
+                                <!-- Page Numbers -->
+                                <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                                    <li class="page-item <?php echo ($page == $i) ? 'active' : ''; ?>">
+                                        <a class="page-link"
+                                        href="products.php?page=<?php echo $i . $filters; ?>">
+                                        <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+
+                                <!-- Next Button -->
+                                <li class="page-item <?php echo ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                                    <a class="page-link"
+                                    href="products.php?page=<?php echo ($page + 1) . $filters; ?>">
+                                    Next
+                                    </a>
+                                </li>
+
+                            </ul>
+
                         </nav>
-                    </div>
+                        </div>
+                    <?php } ?>
+
+                    
                 </div>
             </div>
             <!-- Shop Product End -->
