@@ -44,13 +44,17 @@ include('../connection.php');
                 </div>
             </div>
             <div class="col-lg-6 text-center text-lg-right">
-                <div class="d-inline-flex align-items-center">
-                    <div class="btn-group">
+                <div class="d-inline-flex align-items-center">   
+                <div class="btn-group">
+                    <?php if(!isset($_SESSION['user_name'])) { ?> 
                         <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button">Sign in</button>
-                            <button class="dropdown-item" type="button">Sign up</button>
+                            <a href="../login.php" class="dropdown-item" type="button">Sign in</a>
+                            <a href="../signup.php" class="dropdown-item" type="button">Sign up</a>
                         </div>
+                        <?php } else { ?>
+                        <a href="../logout.php" type="button" class="btn btn-sm btn-light">Log out</a>
+                        <?php } ?>
                     </div>
                     <div class="btn-group mx-2">
                         <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">USD</button>
