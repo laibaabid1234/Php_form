@@ -1,8 +1,12 @@
 <?php
 include('layout/header.php');
-    $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,cart.total as total, products.p_name as name, products.p_price as price,products.image as image  from cart inner join products on cart.product_id=products.id where cart.user_id='$_SESSION[id]'";
-    $cartResult = mysqli_query($conn, $cartQuery);
 
+$cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,cart.total as total, products.p_name as name, products.p_price as price,products.image as image  from cart inner join products on cart.product_id=products.id where cart.user_id='$_SESSION[id]'";
+$cartResult = mysqli_query($conn, $cartQuery);
+
+if(isset($_GET['message'])){ 
+   echo'<script>alert("Order placed successfully!")</script>';
+}
 ?>
  <!-- Checkout Start -->
     <div class="container-fluid">
