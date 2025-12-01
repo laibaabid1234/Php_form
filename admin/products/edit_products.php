@@ -5,6 +5,11 @@ if(!isset($_SESSION['user_name']))
     header("Location: ../../login.php");
     exit();
 }
+if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'admin')
+{
+    header("Location: ../../website/index.php");
+    exit();
+}
 $basePath = '../';
 if(isset($_GET['p_id'])&& $_GET['p_id']!=null)
 {
@@ -59,6 +64,12 @@ if (window.history.replaceState) {
                       <label class="form-label">Product Price</label>
                      <input type="number" class="form-control" placeholder="Product Price" value="<?php echo $editrow['p_price'] ?>" name="p_price" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Qauntity</label>
+                     <input type="number" class="form-control" placeholder="Product Price" value="<?php echo $editrow['quantity'] ?>" name="quantity" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+
                     <div class="col-lg-12 mt-3">  
                         <label class="form-label">Category</label>                             
                         <select name="cat_id" id="" class="form-control">

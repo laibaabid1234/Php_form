@@ -5,6 +5,11 @@ if(!isset($_SESSION['user_name']))
     header("Location: ../../login.php");
     exit();
 }
+if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'admin')
+{
+    header("Location: ../../website/index.php");
+    exit();
+}
 if(isset($_POST['statusId']) && $_POST['statusId'] != null){
     $Id = $_POST['statusId'];
     $categoryStatusQuery = "SELECT status FROM category WHERE id = $Id";

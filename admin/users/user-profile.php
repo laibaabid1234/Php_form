@@ -6,6 +6,11 @@ if(!isset($_SESSION['user_name']))
     header("Location: ../../login.php");
     exit();
 }
+if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'admin')
+{
+    header("Location: ../../website/index.php");
+    exit();
+}
 if(isset($_GET['id'])&& $_GET['id']!=null)
 {
     $id=$_GET['id'];

@@ -8,6 +8,11 @@
       header("Location: ../../login.php");
       exit();
   } 
+  if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'admin')
+{
+    header("Location: ../../website/index.php");
+    exit();
+}
   
   if(isset($_POST['cat_id']) && $_POST['cat_id'] != null){
        $cat_id = $_POST['cat_id'];
@@ -44,6 +49,12 @@
                         <label class="form-label">Price</label>
                         <input type="number" class="form-control" placeholder="Product Price" name="p_price" aria-label="Username" aria-describedby="basic-addon1">
                       </div>
+
+                       <div class="form-group">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" class="form-control" placeholder="Product Price" name="quantity" aria-label="Username" aria-describedby="basic-addon1">
+                      </div>
+              
                       <div class="col-lg-12 mt-3">  
                           <label class="form-label">Category</label>                             
                           <select name="cat_id" id="" class="form-control">

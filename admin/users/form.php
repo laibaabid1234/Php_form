@@ -5,6 +5,11 @@ if(!isset($_SESSION['user_name']))
     header("Location: ../../login.php");
     exit();
 }
+if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'admin')
+{
+    header("Location: ../../website/index.php");
+    exit();
+}
 $basePath = '../';
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
