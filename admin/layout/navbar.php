@@ -72,7 +72,7 @@ $imagePath=$row['image'];
       }
       if($current_url=="/php_form/admin/dashboard.php"){?>
         <img src="<?php echo $imagePath ; ?>" alt="" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">
-      <?php } else {?>
+      <?php } else { ?>
         <img src="../<?php echo $imagePath ; ?>" alt="" class="rounded-circle me-2" width="30" height="30" style="object-fit: cover;">
       <?php } ?>
       
