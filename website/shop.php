@@ -130,7 +130,6 @@ include('layout/header.php');
             var quantity = $(this).val();
             var price = $(this).closest("tr").find(".price").text();
             price = parseFloat(price);
-            alert(price);
             quantity = parseInt(quantity);
             var total = quantity * price;
             $(this).closest("tr").find(".total_amount").text(total);

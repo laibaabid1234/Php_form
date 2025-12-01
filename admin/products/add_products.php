@@ -52,7 +52,7 @@
 
                        <div class="form-group">
                         <label class="form-label">Quantity</label>
-                        <input type="number" class="form-control" placeholder="Product Price" name="quantity" aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="number" class="form-control" placeholder="Product Quantity" name="quantity" aria-label="Username" aria-describedby="basic-addon1">
                       </div>
               
                       <div class="col-lg-12 mt-3">  

@@ -37,7 +37,10 @@ else{
     $sql="SELECT id, p_name, p_price, image, status from products limit $start_from, $limit";
     $result = $conn->query($sql);
 }
- ?>
+ $remaining="SELECT remaining FROM products where id= 5";
+ $result = $conn->query($sql);
+ $remainingproducts = $result->fetch_assoc();
+?>
  <!-- Shop Start -->
     <div class="container-fluid">
         <div class="row px-xl-5">
@@ -213,13 +216,21 @@ else{
                                 <div class="d-flex align-items-center justify-content-center mt-2">
                                     <h5><?php echo $productPrice ?></h5><h6 class="text-muted ml-2"></h6>
                                 </div>
+                                
+                                <?php 
+                                echo "Remaining = " . $remainingproducts;
+                                if($remainingproducts > 0){ ?>
+                                <p class="text-success">In stock</p>
+                                <?php } else { ?>                             
+                                <p class="text-muted">Out of stock</p>
+                                <?php } ?>
+
                                 <div class="d-flex align-items-center justify-content-center mb-1">
                                     <small class="fa fa-star text-primary mr-1"></small>
                                     <small class="fa fa-star text-primary mr-1"></small>
                                     <small class="fa fa-star text-primary mr-1"></small>
                                     <small class="fa fa-star text-primary mr-1"></small>
                                     <small class="fa fa-star text-primary mr-1"></small>
-                                    <small>(99)</small>
                                 </div>
                             </div>
                         </div>
@@ -230,9 +241,8 @@ else{
                     <div class="col-12">
                         <nav>
                            <ul class="pagination justify-content-center">
-
                                 <?php
-                                
+                              
                                 $filters = "";
                                 if(isset($_GET['cat_id']) && $_GET['cat_id'] != null){
                                     $filters .= "&cat_id=" . $_GET['cat_id'];

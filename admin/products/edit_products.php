@@ -67,7 +67,7 @@ if (window.history.replaceState) {
 
                     <div class="form-group">
                       <label class="form-label">Qauntity</label>
-                     <input type="number" class="form-control" placeholder="Product Price" value="<?php echo $editrow['quantity'] ?>" name="quantity" aria-label="Username" aria-describedby="basic-addon1">
+                     <input type="number" class="form-control" placeholder="Product Quantity" value="<?php echo $editrow['quantity'] ?>" name="quantity" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
 
                     <div class="col-lg-12 mt-3">  
