@@ -32,6 +32,28 @@ if(isset($_POST['statusId']) && $_POST['statusId'] != null){
     exit();
   
 }
+if(isset($_POST['featuredId']) && $_POST['featuredId'] != null){
+    $Id = $_POST['featuredId'];
+    $featuredQuery = "SELECT is_featured FROM category WHERE id = $Id";
+    $featuredResult = mysqli_query($conn, $featuredQuery);
+    $featuredRow = mysqli_fetch_assoc($featuredResult);
+    $featuredId = $featuredRow['is_featured'];
+    if($featuredId==0){
+      $featuredId=1;
+    }else{
+      $featuredId=0;
+    }
+    $updatefeaturedQuery = "UPDATE category SET is_featured = $featuredId WHERE id = $Id";
+    $featuredchanged=mysqli_query($conn, $updatefeaturedQuery);
+    if($featuredchanged){
+      $message = "Featured updated successfully";
+    }else{
+      $message = "Featured not updated";  
+    }   
+    echo json_encode(['message' => $message]);
+    exit();
+  
+}
 $basePath = '../';
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
@@ -173,7 +195,9 @@ $category=mysqli_query($conn,$query1);
                         <th>Name</th>
                         <th>Actions</th>
                         <th>Status</th>
-                        <th>Image</th>
+                        <th>Is Featured</th>
+                        <th>Image</th>                       
+
                       </tr>
                     </thead>
                     <tbody>
@@ -193,8 +217,13 @@ $category=mysqli_query($conn,$query1);
                        </td>      
                        <td>                        
                           <div class="form-check form-switch">
-                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch" id="myToggleSwitch">                                              
+                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch">                                              
                           </div>                                                              
+                       </td>
+                       <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input featured" id="featured_id" value="<?php echo $row['id'] ?>" type="checkbox" <?php if($row['is_featured']==1){ echo 'checked'; } ?> name="featured" role="switch">                                              
+                          </div>  
                        </td>
                        <td><img src="../<?php echo $row['image']; ?>" alt="" width="100px" ></td>
                     </tr>
@@ -276,6 +305,20 @@ $category=mysqli_query($conn,$query1);
           success:function(response){
             response = JSON.parse(response);
             alert(response.statusmessage);
+          }
+
+        });
+    });
+  
+    $('.featured').change(function(){
+     var featured_id= $(this).val();
+        $.ajax({
+          url:'category.php',
+          type:'post',
+          data:{featuredId:featured_id},
+          success:function(response){
+            response = JSON.parse(response);
+            alert(response.message);
           }
 
         });

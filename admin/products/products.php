@@ -32,6 +32,28 @@ if(isset($_POST['statusId']) && $_POST['statusId'] != null){
     exit();
   
 }
+if(isset($_POST['featuredId']) && $_POST['featuredId'] != null){
+    $Id = $_POST['featuredId'];
+    $featuredQuery = "SELECT is_featured FROM products WHERE id = $Id";
+    $featuredResult = mysqli_query($conn, $featuredQuery);
+    $featuredRow = mysqli_fetch_assoc($featuredResult);
+    $featuredId = $featuredRow['is_featured'];
+    if($featuredId==0){
+      $featuredId=1;
+    }else{
+      $featuredId=0;
+    }
+    $updatefeaturedQuery = "UPDATE products SET is_featured = $featuredId WHERE id = $Id";
+    $featuredchanged=mysqli_query($conn, $updatefeaturedQuery);
+    if($featuredchanged){
+      $message = "Featured updated successfully";
+    }else{
+      $message = "Featured not updated";  
+    }   
+    echo json_encode(['message' => $message]);
+    exit();
+  
+}
 $basePath = '../';
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
@@ -117,7 +139,7 @@ else if(isset($_POST['add']) && isset($_POST['p_name']) && $_POST['p_name']!= nu
         $msg="New record has been submitted";
     }
 }
-$query1="SELECT products.id AS p_id, products.p_name,products.image as image,products.quantity as quantity, category.name AS cat_name, sub_category.name AS sub_name,products.p_price as p_price, products.status as status FROM products INNER JOIN 
+$query1="SELECT products.id AS p_id, products.p_name,products.image as image,products.quantity as quantity, category.name AS cat_name, sub_category.name AS sub_name,products.p_price as p_price, products.is_featured as is_featured, products.status as status FROM products INNER JOIN 
 sub_category ON sub_category.id=products.subcat_id INNER JOIN category ON category.id=products.cat_id";
 $products=mysqli_query($conn,$query1);
 
@@ -178,8 +200,9 @@ if (window.history.replaceState) {
                         <th>Sub Category Name</th>
                         <th>Quantity</th>
                         <th>Image</th>
-                        <th>Actions</th>
+                        <th>Actions</th>          
                         <th>Status</th>
+                        <th>Is Featured</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -201,8 +224,13 @@ if (window.history.replaceState) {
                        </td> 
                         <td>                        
                           <div class="form-check form-switch">
-                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['p_id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch" id="myToggleSwitch">                                              
+                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['p_id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch">                                              
                           </div>                                                              
+                       </td>
+                       <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input featured" id="featured_id" value="<?php echo $row['p_id'] ?>" type="checkbox" <?php if($row['is_featured']==1){ echo 'checked'; } ?> name="featured" role="switch">                                              
+                          </div>
                        </td>
                     </tr>
       
@@ -226,6 +254,20 @@ if (window.history.replaceState) {
           success:function(response){
             response = JSON.parse(response);
             alert(response.statusmessage);
+          }
+
+        });
+        
+    });
+    $('.featured').change(function(){
+     var featured_id= $(this).val();
+        $.ajax({
+          url:'products.php',
+          type:'post',
+          data:{featuredId:featured_id},
+          success:function(response){
+            response = JSON.parse(response);
+            alert(response.message);
           }
 
         });
