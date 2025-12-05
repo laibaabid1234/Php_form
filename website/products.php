@@ -2,41 +2,100 @@
  include ('layout/header.php');
 
 
+// $limit = 6;
+// $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+// $start_from = ($page - 1) * $limit;
+
+// if(isset($_GET['search']) && $_GET['search'] != null){
+//     $search = mysqli_real_escape_string($conn, $_GET['search']);
+//     $countquery="SELECT COUNT(id) AS id FROM products WHERE p_name LIKE '%$search%'";
+//     $count_result = mysqli_query($conn, $countquery);
+//     $count_row = mysqli_fetch_assoc($count_result);
+//     $total_records = $count_row['id'];
+//     $total_pages = ceil($total_records / $limit);
+//     $query="SELECT * FROM products WHERE p_name LIKE '%$search%' limit $start_from, $limit";
+//     $result=mysqli_query($conn,$query);
+// }
+// else{
+    
+//     if(isset($_GET['cat_id'])&& $_GET['cat_id']!=null && isset($_GET['sub_cat']) && $_GET['sub_cat']!=null)
+//     {
+//         $catid=$_GET['cat_id'];
+//         $subid=$_GET['sub_cat'];
+//         $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid AND subcat_id= $subid";
+//         $count_result = mysqli_query($conn, $countquery);
+//         $count_row = mysqli_fetch_assoc($count_result);
+//         $total_records = $count_row['id'];
+//         $total_pages = ceil($total_records / $limit);
+
+//         $query="SELECT * FROM products WHERE cat_id= $catid AND subcat_id= $subid limit $start_from, $limit";
+//         $result=mysqli_query($conn,$query);   
+//     }
+//     elseif(isset($_GET['cat_id'])&& $_GET['cat_id']!=null){
+//         $catid=$_GET['cat_id'];
+//         $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid";
+//         $count_result = mysqli_query($conn, $countquery);   
+//         $count_row = mysqli_fetch_assoc($count_result);
+//         $total_records = $count_row['id'];
+//         $total_pages = ceil($total_records / $limit);
+//         $query="SELECT * FROM products WHERE cat_id= $catid limit $start_from, $limit";
+//         $result=mysqli_query($conn,$query);   
+//     }
+//     else{
+//             $total_query = "SELECT COUNT(id) AS id FROM products";
+//             $total_result = mysqli_query($conn, $total_query);
+//             $total_row = mysqli_fetch_assoc($total_result);
+//             $total_records = $total_row['id'];
+//             $total_pages = ceil($total_records / $limit);
+//         $sql="SELECT id, p_name, p_price, image, status from products limit $start_from, $limit";
+//         $result = $conn->query($sql);
+//     } 
+// }
 $limit = 6;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start_from = ($page - 1) * $limit;
 
- if(isset($_GET['cat_id'])&& $_GET['cat_id']!=null && isset($_GET['sub_cat']) && $_GET['sub_cat']!=null)
-{
-    $catid=$_GET['cat_id'];
-    $subid=$_GET['sub_cat'];
-    $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid AND subcat_id= $subid";
-    $count_result = mysqli_query($conn, $countquery);
-    $count_row = mysqli_fetch_assoc($count_result);
-    $total_records = $count_row['id'];
-    $total_pages = ceil($total_records / $limit);
-    $query="SELECT * FROM products WHERE cat_id= $catid AND subcat_id= $subid limit $start_from, $limit";
-    $result=mysqli_query($conn,$query);   
+// base query
+$where = "WHERE 1=1";
+
+// search
+if (!empty($_GET['search'])) {
+    $search = mysqli_real_escape_string($conn, $_GET['search']);
+    $where .= " AND p_name LIKE '%$search%'";
 }
-elseif(isset($_GET['cat_id'])&& $_GET['cat_id']!=null){
-    $catid=$_GET['cat_id'];
-    $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid";
-    $count_result = mysqli_query($conn, $countquery);   
-    $count_row = mysqli_fetch_assoc($count_result);
-    $total_records = $count_row['id'];
-    $total_pages = ceil($total_records / $limit);
-    $query="SELECT * FROM products WHERE cat_id= $catid limit $start_from, $limit";
-    $result=mysqli_query($conn,$query);   
+
+// categories
+if (!empty($_GET['cat_id'])) {
+    $catid = (int)$_GET['cat_id'];
+    $where .= " AND cat_id = $catid";
 }
-else{
-        $total_query = "SELECT COUNT(id) AS id FROM products";
-        $total_result = mysqli_query($conn, $total_query);
-        $total_row = mysqli_fetch_assoc($total_result);
-        $total_records = $total_row['id'];
-        $total_pages = ceil($total_records / $limit);
-    $sql="SELECT id, p_name, p_price, image, status from products limit $start_from, $limit";
-    $result = $conn->query($sql);
-} ?>
+
+if (!empty($_GET['sub_cat'])) {
+    $subid = (int)$_GET['sub_cat'];
+    $where .= " AND subcat_id = $subid";
+}
+if(isset($_GET['price']) && $_GET['price'] != null && $_GET['price'] != 'all'){
+
+    $price_range = explode('-', $_GET['price']);
+    if(count($price_range) == 2){
+        $min_price = (float)$price_range[0];
+        $max_price = (float)$price_range[1];
+        $where .= " AND p_price BETWEEN $min_price AND $max_price";
+    }
+}
+
+// count total rows
+$countquery = "SELECT COUNT(id) AS total FROM products $where";
+$count_result = mysqli_query($conn, $countquery);
+$count_row = mysqli_fetch_assoc($count_result);
+$total_records = $count_row['total'];
+$total_pages = ceil($total_records / $limit);
+
+// final data query
+$query = "SELECT * FROM products $where LIMIT $start_from, $limit";
+$result = mysqli_query($conn, $query);
+
+?>
  <!-- Shop Start -->
     <div class="container-fluid">
         <div class="row px-xl-5">
@@ -45,34 +104,43 @@ else{
                 <!-- Price Start -->
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by price</span></h5>
                 <div class="bg-light p-4 mb-30">
-                    <form>
+                    <form action="products.php" method="get" onchange="this.submit()">
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="price-all">
+                            <input type="checkbox"  class="custom-control-input" name="price" <?= (isset($_GET['price']) && $_GET['price'] == 'all') ? 'checked' : '' ?> id="price-all" value="all">
+                             <?php if (isset($_GET['cat_id'])) { ?>
+                                <input type="hidden" name="cat_id" value="<?= $_GET['cat_id'] ?>">
+                            <?php } ?>
+                            <?php if (isset($_GET['sub_cat'])) { ?>
+                                <input type="hidden" name="sub_cat" value="<?= $_GET['sub_cat'] ?>">
+                            <?php } ?>
+                             <?php if (isset($_GET['search'])) { ?>
+                                <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search']) ?>">    
+                            <?php } ?>
                             <label class="custom-control-label" for="price-all">All Price</label>
                             <span class="badge border font-weight-normal">1000</span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-1">
+                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '0-1000') ? 'checked' : '' ?>  class="custom-control-input" id="price-1" value="0-1000">
                             <label class="custom-control-label" for="price-1">$0 - $100</label>
                             <span class="badge border font-weight-normal">150</span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-2">
+                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '1000-2000') ? 'checked' : '' ?> class="custom-control-input" id="price-2" value="1000-2000">
                             <label class="custom-control-label" for="price-2">$100 - $200</label>
                             <span class="badge border font-weight-normal">295</span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-3">
+                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '2000-3000') ? 'checked' : '' ?> class="custom-control-input" id="price-3" value="2000-3000">
                             <label class="custom-control-label" for="price-3">$200 - $300</label>
                             <span class="badge border font-weight-normal">246</span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="price-4">
+                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '3000-4000') ? 'checked' : '' ?> class="custom-control-input" id="price-4" value="3000-4000">
                             <label class="custom-control-label" for="price-4">$300 - $400</label>
                             <span class="badge border font-weight-normal">145</span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="price-5">
+                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '4000-5000') ? 'checked' : '' ?> class="custom-control-input" id="price-5" value="4000-5000">
                             <label class="custom-control-label" for="price-5">$400 - $500</label>
                             <span class="badge border font-weight-normal">168</span>
                         </div>
@@ -81,7 +149,7 @@ else{
                 <!-- Price End -->
                 
                 <!-- Color Start -->
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by color</span></h5>
+                <!-- <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by color</span></h5>
                 <div class="bg-light p-4 mb-30">
                     <form>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
@@ -115,11 +183,11 @@ else{
                             <span class="badge border font-weight-normal">168</span>
                         </div>
                     </form>
-                </div>
+                </div> -->
                 <!-- Color End -->
 
                 <!-- Size Start -->
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by size</span></h5>
+                <!-- <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by size</span></h5>
                 <div class="bg-light p-4 mb-30">
                     <form>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
@@ -153,7 +221,7 @@ else{
                             <span class="badge border font-weight-normal">168</span>
                         </div>
                     </form>
-                </div>
+                </div> -->
                 <!-- Size End -->
             </div>
             <!-- Shop Sidebar End -->

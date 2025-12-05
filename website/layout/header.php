@@ -78,9 +78,16 @@ if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'user')
                 </a>
             </div>
             <div class="col-lg-4 col-6 text-left">
-                <form action="">
+                <form action="../website/products.php" method="get">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products">
+                        <?php if (isset($_GET['cat_id'])) { ?>
+                            <input type="hidden" name="cat_id" value="<?= $_GET['cat_id'] ?>">
+                        <?php } ?>
+
+                        <?php if (isset($_GET['sub_cat'])) { ?>
+                            <input type="hidden" name="sub_cat" value="<?= $_GET['sub_cat'] ?>">
+                        <?php } ?>
+                        <input type="text" class="form-control" name="search" placeholder="Search for products">
                         <div class="input-group-append">
                             <span class="input-group-text bg-transparent text-primary">
                                 <i class="fa fa-search"></i>
