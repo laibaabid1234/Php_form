@@ -1,5 +1,10 @@
 <?php
 include('../connection.php');
+if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'user')
+{
+    header("Location: ../admin/dashboard.php");
+    exit();
+}
 if(isset($_POST['wishlistId'])) {   
     $wishlist_id = $_POST['wishlistId'];
     $deleteQuery = "DELETE FROM wishlist WHERE id='$wishlist_id'";

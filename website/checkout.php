@@ -5,7 +5,7 @@ $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as 
 $cartResult = mysqli_query($conn, $cartQuery);
 
 if(isset($_GET['message'])){ 
-   echo'<script>alert("Order placed successfully!")</script>';
+   $msg="Order placed successfully!";
 }
 ?>
  <!-- Checkout Start -->
@@ -14,10 +14,15 @@ if(isset($_GET['message'])){
             <form action="proceed_to_checkout.php" method="post">
                 <div class="row">
                 <div class="col-lg-8">
+                    <?php if(isset($_GET['message'])){ ?>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">                  
+                    <?php echo $msg ?>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>                  
+                    </div>
+                    <?php } ?>
                     <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Billing Address</span></h5>
                     <div class="bg-light p-30 mb-5">
-                        <div class="row">
-                    
+                        <div class="row">                   
                             <div class="col-md-6 form-group">
                                 <label>First Name</label>
                                 <input class="form-control" name="fname" type="text" placeholder="John" required>
@@ -112,7 +117,7 @@ if(isset($_GET['message'])){
                         <div class="bg-light p-30">
                             <div class="form-group mb-4">
                                 <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" value="cash" name="payment" id="banktransfer">
+                                    <input type="radio" class="custom-control-input" value="cash" name="payment" id="banktransfer" required>
                                     <label class="custom-control-label" for="banktransfer">Cash On Delivery</label>
                                 </div>
                             </div>

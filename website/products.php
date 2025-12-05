@@ -10,7 +10,7 @@ $start_from = ($page - 1) * $limit;
 {
     $catid=$_GET['cat_id'];
     $subid=$_GET['sub_cat'];
-    $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid AND subcat_id= $subid ";
+    $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid AND subcat_id= $subid";
     $count_result = mysqli_query($conn, $countquery);
     $count_row = mysqli_fetch_assoc($count_result);
     $total_records = $count_row['id'];
@@ -36,11 +36,7 @@ else{
         $total_pages = ceil($total_records / $limit);
     $sql="SELECT id, p_name, p_price, image, status from products limit $start_from, $limit";
     $result = $conn->query($sql);
-}
- $remaining="SELECT remaining FROM products where id= 5";
- $result = $conn->query($sql);
- $remainingproducts = $result->fetch_assoc();
-?>
+} ?>
  <!-- Shop Start -->
     <div class="container-fluid">
         <div class="row px-xl-5">
@@ -173,22 +169,22 @@ else{
                                 <button class="btn btn-sm btn-light ml-2"><i class="fa fa-bars"></i></button>
                             </div>
                             <div class="ml-2">
-                                <div class="btn-group">
+                                <!-- <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">Sorting</button>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item" href="#">Latest</a>
                                         <a class="dropdown-item" href="#">Popularity</a>
                                         <a class="dropdown-item" href="#">Best Rating</a>
                                     </div>
-                                </div>
-                                <div class="btn-group ml-2">
+                                </div> -->
+                                <!-- <div class="btn-group ml-2">
                                     <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">Showing</button>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item" href="#">10</a>
                                         <a class="dropdown-item" href="#">20</a>
                                         <a class="dropdown-item" href="#">30</a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -198,9 +194,15 @@ else{
                             $productId = $editrow['id'];
                             $productName = $editrow['p_name'];  
                             $productPrice = $editrow['p_price'];
-                            $productImage = $editrow['image'];                                           
+                            $productImage = $editrow['image'];                                         
                     ?>
                     <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                    <?php 
+                        $query="SELECT remaining FROM products where id= $productId";
+                        $remainingquery = $conn->query($query);
+                        $remainingproducts = $remainingquery->fetch_assoc();
+                        $remaining= $remainingproducts['remaining'];  
+                        if($remaining > 0){ ?>
                         <div class="product-item bg-light mb-4">
                             <div class="product-img position-relative overflow-hidden">
                                 <img class="img-fluid" src="../admin/<?php echo $productImage ?>" alt="" style="width:100%; height:250px; object-fit:cover;">
@@ -215,15 +217,37 @@ else{
                                 <a class="h6 text-decoration-none text-truncate" href=""><?php echo $productName ?></a>
                                 <div class="d-flex align-items-center justify-content-center mt-2">
                                     <h5><?php echo $productPrice ?></h5><h6 class="text-muted ml-2"></h6>
-                                </div>
-                                
-                                <?php 
-                                echo "Remaining = " . $remainingproducts;
-                                if($remainingproducts > 0){ ?>
+                                </div>                  
+                               
                                 <p class="text-success">In stock</p>
-                                <?php } else { ?>                             
+                            
+                                <div class="d-flex align-items-center justify-content-center mb-1">
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                </div>
+                            </div>
+                        </div>
+                     <?php } else { ?>                             
+                        <div class="product-item bg-light mb-4">
+                            <div class="product-img position-relative overflow-hidden">
+                                <img class="img-fluid" src="../admin/<?php echo $productImage ?>" alt="" style="width:100%; height:250px; object-fit:cover;">
+                                <div class="product-action">
+                                    <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>"><i class="far fa-heart"></i></a>
+                                    <!-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
+                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a> -->
+                                </div>
+                            </div>
+                            <div class="text-center py-4">
+                                <a class="h6 text-decoration-none text-truncate" href=""><?php echo $productName ?></a>
+                                <div class="d-flex align-items-center justify-content-center mt-2">
+                                    <h5><?php echo $productPrice ?></h5><h6 class="text-muted ml-2"></h6>
+                                </div>                  
+                               
                                 <p class="text-muted">Out of stock</p>
-                                <?php } ?>
+                               
 
                                 <div class="d-flex align-items-center justify-content-center mb-1">
                                     <small class="fa fa-star text-primary mr-1"></small>
@@ -234,6 +258,9 @@ else{
                                 </div>
                             </div>
                         </div>
+                        <?php } ?>
+
+                                
                     </div>
                     <?php } ?>
                     <?php } ?>
@@ -259,7 +286,7 @@ else{
                                     href="products.php?page=<?php echo ($page - 1) . $filters; ?>">
                                     Previous
                                     </a>
-                                </li>
+                                </li> 
 
                                 <!-- Page Numbers -->
                                 <?php for($i = 1; $i <= $total_pages; $i++): ?>

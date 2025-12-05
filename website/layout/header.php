@@ -1,12 +1,16 @@
 <?php
 include('../connection.php');
+if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'user')
+{
+    header("Location: ../admin/dashboard.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <title>MultiShop - Online Shop Website Template</title>
+    <title>MultiShop - Online Shop Website</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -35,13 +39,7 @@ include('../connection.php');
     <!-- Topbar Start -->
     <div class="container-fluid">
         <div class="row bg-secondary py-1 px-xl-5">
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="d-inline-flex align-items-center h-100">
-                    <a class="text-body mr-3" href="">About</a>
-                    <a class="text-body mr-3" href="">Contact</a>
-                    <a class="text-body mr-3" href="">Help</a>
-                    <a class="text-body mr-3" href="">FAQs</a>
-                </div>
+            <div class="col-lg-6 d-none d-lg-block">          
             </div>
             <div class="col-lg-6 text-center text-lg-right">
                 <div class="d-inline-flex align-items-center">   
@@ -56,22 +54,7 @@ include('../connection.php');
                         <a href="../logout.php" type="button" class="btn btn-sm btn-light">Log out</a>
                         <?php } ?>
                     </div>
-                    <div class="btn-group mx-2">
-                        <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">USD</button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button">EUR</button>
-                            <button class="dropdown-item" type="button">GBP</button>
-                            <button class="dropdown-item" type="button">CAD</button>
-                        </div>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">EN</button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button">FR</button>
-                            <button class="dropdown-item" type="button">AR</button>
-                            <button class="dropdown-item" type="button">RU</button>
-                        </div>
-                    </div>
+                    
                 </div>
                 <div class="d-inline-flex align-items-center d-block d-lg-none">
                     <a href="" class="btn px-0 ml-2">
@@ -146,16 +129,6 @@ include('../connection.php');
                         echo '</div>';
                         }
                         ?>
-                        
-                        <!-- <a href="" class="nav-item nav-link">Shirts</a>
-                        <a href="" class="nav-item nav-link">Jeans</a>
-                        <a href="" class="nav-item nav-link">Swimwear</a>
-                        <a href="" class="nav-item nav-link">Sleepwear</a>
-                        <a href="" class="nav-item nav-link">Sportswear</a>
-                        <a href="" class="nav-item nav-link">Jumpsuits</a>
-                        <a href="" class="nav-item nav-link">Blazers</a>
-                        <a href="" class="nav-item nav-link">Jackets</a>
-                        <a href="" class="nav-item nav-link">Shoes</a> -->
                     </div>
                 </nav>
             </div>
@@ -179,7 +152,7 @@ include('../connection.php');
                             <?php } ?>
                             <?php 
                             $current_url = $_SERVER['REQUEST_URI'];
-                                if($current_url=="/php_form/website/products.php"){?>                      
+                                if(strpos($current_url, "products.php") !== false){?>                      
                                     <a href="products.php" class="nav-item nav-link active">Shop</a> 
                                 <?php } else { ?>
                                     <a href="products.php" class="nav-item nav-link">Shop</a>
@@ -187,7 +160,7 @@ include('../connection.php');
 
                             <?php 
                             $current_url = $_SERVER['REQUEST_URI'];
-                                if($current_url=="/php_form/website/checkout.php"){?>                      
+                                if(strpos($current_url, "checkout.php") !== false){?>                      
                                     <a href="checkout.php" class="nav-item nav-link active">Checkout</a> 
                                 <?php } else { ?>
                                     <a href="checkout.php" class="nav-item nav-link">Checkout</a>

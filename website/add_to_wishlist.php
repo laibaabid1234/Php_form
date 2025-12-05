@@ -1,5 +1,10 @@
 <?php
 include('../connection.php');
+if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'user')
+{
+    header("Location: ../admin/dashboard.php");
+    exit();
+}
 $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
 
 if(isset($_POST['wishlistUpdate']) && $_POST['wishlistUpdate'] == "true"){

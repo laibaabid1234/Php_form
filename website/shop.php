@@ -159,7 +159,6 @@ include('layout/header.php');
 
         $(".btn-danger").on('click', function(){
             var cartId = $(this).data("id");
-            alert(cartId);
             var row = $(this).closest("tr");
             $.ajax({
                 url: 'remove_from_cart.php',

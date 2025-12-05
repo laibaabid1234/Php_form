@@ -1,5 +1,10 @@
 <?php
 include('../connection.php');
+if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'user')
+{
+    header("Location: ../admin/dashboard.php");
+    exit();
+}
 if(isset($_POST['cartId'])) {   
     $cart_id = $_POST['cartId'];
     $deleteQuery = "DELETE FROM cart WHERE id='$cart_id'";
