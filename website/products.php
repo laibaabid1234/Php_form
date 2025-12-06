@@ -1,56 +1,6 @@
  <?php 
  include ('layout/header.php');
 
-
-// $limit = 6;
-// $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-// $start_from = ($page - 1) * $limit;
-
-// if(isset($_GET['search']) && $_GET['search'] != null){
-//     $search = mysqli_real_escape_string($conn, $_GET['search']);
-//     $countquery="SELECT COUNT(id) AS id FROM products WHERE p_name LIKE '%$search%'";
-//     $count_result = mysqli_query($conn, $countquery);
-//     $count_row = mysqli_fetch_assoc($count_result);
-//     $total_records = $count_row['id'];
-//     $total_pages = ceil($total_records / $limit);
-//     $query="SELECT * FROM products WHERE p_name LIKE '%$search%' limit $start_from, $limit";
-//     $result=mysqli_query($conn,$query);
-// }
-// else{
-    
-//     if(isset($_GET['cat_id'])&& $_GET['cat_id']!=null && isset($_GET['sub_cat']) && $_GET['sub_cat']!=null)
-//     {
-//         $catid=$_GET['cat_id'];
-//         $subid=$_GET['sub_cat'];
-//         $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid AND subcat_id= $subid";
-//         $count_result = mysqli_query($conn, $countquery);
-//         $count_row = mysqli_fetch_assoc($count_result);
-//         $total_records = $count_row['id'];
-//         $total_pages = ceil($total_records / $limit);
-
-//         $query="SELECT * FROM products WHERE cat_id= $catid AND subcat_id= $subid limit $start_from, $limit";
-//         $result=mysqli_query($conn,$query);   
-//     }
-//     elseif(isset($_GET['cat_id'])&& $_GET['cat_id']!=null){
-//         $catid=$_GET['cat_id'];
-//         $countquery="SELECT COUNT(id) AS id FROM products WHERE cat_id= $catid";
-//         $count_result = mysqli_query($conn, $countquery);   
-//         $count_row = mysqli_fetch_assoc($count_result);
-//         $total_records = $count_row['id'];
-//         $total_pages = ceil($total_records / $limit);
-//         $query="SELECT * FROM products WHERE cat_id= $catid limit $start_from, $limit";
-//         $result=mysqli_query($conn,$query);   
-//     }
-//     else{
-//             $total_query = "SELECT COUNT(id) AS id FROM products";
-//             $total_result = mysqli_query($conn, $total_query);
-//             $total_row = mysqli_fetch_assoc($total_result);
-//             $total_records = $total_row['id'];
-//             $total_pages = ceil($total_records / $limit);
-//         $sql="SELECT id, p_name, p_price, image, status from products limit $start_from, $limit";
-//         $result = $conn->query($sql);
-//     } 
-// }
 $limit = 6;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start_from = ($page - 1) * $limit;
@@ -74,12 +24,16 @@ if (!empty($_GET['sub_cat'])) {
     $subid = (int)$_GET['sub_cat'];
     $where .= " AND subcat_id = $subid";
 }
+// preserve a base where-clause (without any price filter) for counting buckets
+$base_where = $where;
+
 if(isset($_GET['price']) && $_GET['price'] != null && $_GET['price'] != 'all'){
 
     $price_range = explode('-', $_GET['price']);
     if(count($price_range) == 2){
         $min_price = (float)$price_range[0];
         $max_price = (float)$price_range[1];
+        // apply price filter to main where used for listing/pagination
         $where .= " AND p_price BETWEEN $min_price AND $max_price";
     }
 }
@@ -95,8 +49,23 @@ $total_pages = ceil($total_records / $limit);
 $query = "SELECT * FROM products $where LIMIT $start_from, $limit";
 $result = mysqli_query($conn, $query);
 
-$quantityrange= "SELECT * FROM products $where";
-$quantity_result = mysqli_query($conn, $quantityrange);
+
+
+function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
+    // always count items in the given price bucket, ignoring any current price filter
+    $where_clause = $base_where . " AND p_price BETWEEN " . (float)$min . " AND " . (float)$max;
+    $sql = "SELECT COUNT(id) AS total FROM products " . $where_clause;
+    $result = mysqli_query($conn, $sql);
+    if($result){
+        $row = mysqli_fetch_assoc($result);
+        echo (int)$row['total'];
+    } else {
+        echo 0;
+    }
+}
+
+
+
 ?>
  <!-- Shop Start -->
     <div class="container-fluid">
@@ -119,27 +88,47 @@ $quantity_result = mysqli_query($conn, $quantityrange);
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '0-1000') ? 'checked' : '' ?>  class="custom-control-input" id="price-1" value="0-1000">
                             <label class="custom-control-label" for="price-1">0 - 1000</label>
-                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
+                            <span class="badge border font-weight-normal">
+                                                                <?php 
+                                                                    countProducts($conn, 0, 1000, $base_where);
+                                                                ?>
+                            </span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '1000-2000') ? 'checked' : '' ?> class="custom-control-input" id="price-2" value="1000-2000">
                             <label class="custom-control-label" for="price-2">1000 - 2000</label>
-                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
+                            <span class="badge border font-weight-normal">
+                                                             <?php 
+                                                                    countProducts($conn, 1000, 2000, $base_where);
+                                                                ?>
+                            </span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '2000-3000') ? 'checked' : '' ?> class="custom-control-input" id="price-3" value="2000-3000">
                             <label class="custom-control-label" for="price-3">2000 - 3000</label>
-                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
+                            <span class="badge border font-weight-normal">
+                                                                <?php 
+                                                                    countProducts($conn, 2000, 3000, $base_where);
+                                                                ?>
+                            </span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '3000-4000') ? 'checked' : '' ?> class="custom-control-input" id="price-4" value="3000-4000">
                             <label class="custom-control-label" for="price-4">3000 - 4000</label>
-                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
+                            <span class="badge border font-weight-normal">
+                                                             <?php 
+                                                                    countProducts($conn, 3000, 4000, $base_where);
+                                                                ?>
+                            </span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '4000-5000') ? 'checked' : '' ?> class="custom-control-input" id="price-5" value="4000-5000">
                             <label class="custom-control-label" for="price-5">4000 - 5000</label>
-                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
+                            <span class="badge border font-weight-normal">
+                                                             <?php 
+                                                                    countProducts($conn, 4000, 5000, $base_where);
+                                                                ?>
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -267,12 +256,14 @@ $quantity_result = mysqli_query($conn, $quantityrange);
                         $remainingquery = $conn->query($query);
                         $remainingproducts = $remainingquery->fetch_assoc();
                         $remaining= $remainingproducts['remaining'];  
-                        if($remaining > 0){ ?>
+                     ?>
                         <div class="product-item bg-light mb-4">
                             <div class="product-img position-relative overflow-hidden">
                                 <img class="img-fluid" src="../admin/<?php echo $productImage ?>" alt="" style="width:100%; height:250px; object-fit:cover;">
                                 <div class="product-action">
+                                    <?php if($remaining > 0){ ?>
                                     <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" ><i class="fa fa-shopping-cart"></i></a>
+                                    <?php }  ?>
                                     <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>"><i class="far fa-heart"></i></a>
                                     <!-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
                                     <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a> -->
@@ -283,8 +274,11 @@ $quantity_result = mysqli_query($conn, $quantityrange);
                                 <div class="d-flex align-items-center justify-content-center mt-2">
                                     <h5><?php echo $productPrice ?></h5><h6 class="text-muted ml-2"></h6>
                                 </div>                  
-                               
+                              <?php if($remaining > 0){ ?>
                                 <p class="text-success">In stock</p>
+                                <?php } else { ?>
+                                    <p class="text-danger">Out of stock</p>
+                                <?php } ?>
                             
                                 <div class="d-flex align-items-center justify-content-center mb-1">
                                     <small class="fa fa-star text-primary mr-1"></small>
@@ -295,35 +289,8 @@ $quantity_result = mysqli_query($conn, $quantityrange);
                                 </div>
                             </div>
                         </div>
-                     <?php } else { ?>                             
-                        <div class="product-item bg-light mb-4">
-                            <div class="product-img position-relative overflow-hidden">
-                                <img class="img-fluid" src="../admin/<?php echo $productImage ?>" alt="" style="width:100%; height:250px; object-fit:cover;">
-                                <div class="product-action">
-                                    <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>"><i class="far fa-heart"></i></a>
-                                    <!-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a> -->
-                                </div>
-                            </div>
-                            <div class="text-center py-4">
-                                <a class="h6 text-decoration-none text-truncate" href=""><?php echo $productName ?></a>
-                                <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5><?php echo $productPrice ?></h5><h6 class="text-muted ml-2"></h6>
-                                </div>                  
-                               
-                                <p class="text-muted">Out of stock</p>
-                               
-
-                                <div class="d-flex align-items-center justify-content-center mb-1">
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                    <small class="fa fa-star text-primary mr-1"></small>
-                                </div>
-                            </div>
-                        </div>
-                        <?php } ?>
+                   
+  
 
                                 
                     </div>

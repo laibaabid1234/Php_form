@@ -11,10 +11,10 @@ $result = mysqli_query($conn, $query);
 $row = $result->fetch_assoc();
 $productId = $row['id'];
 
-$query="SELECT remaining FROM products where id= $productId";
-$remainingquery = $conn->query($query);
-$remainingproducts = $remainingquery->fetch_assoc();
-$remaining= $remainingproducts['remaining'];  
+// $query="SELECT remaining FROM products where id= $productId";
+// $remainingquery = $conn->query($query);
+// $remainingproducts = $remainingquery->fetch_assoc();
+// $remaining= $remainingproducts['remaining'];  
 ?>
   <!-- Cart Start -->
     <div class="container-fluid">
@@ -33,7 +33,7 @@ $remaining= $remainingproducts['remaining'];
                     </thead>
                     <tbody class="align-middle">
                         <?php 
-                        $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,cart.total as total, products.p_name as name, products.p_price as price,products.image as image  from cart inner join products on cart.product_id=products.id where cart.user_id='$_SESSION[id]'";
+                        $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,cart.total as total, products.p_name as name, products.p_price as price,products.image as image ,products.remaining as remaining from cart inner join products on cart.product_id=products.id where cart.user_id='$_SESSION[id]'";
                         $cartResult = mysqli_query($conn, $cartQuery);
                         while($cartRow = mysqli_fetch_assoc($cartResult)){
                             
@@ -44,6 +44,8 @@ $remaining= $remainingproducts['remaining'];
                             $productPrice = $cartRow['price'];   
                             $productImage = $cartRow['image'];
                             $cartid = $cartRow['id'];
+                            $remaining = $cartRow['remaining'];
+
                         ?>
 
                         <tr>
@@ -58,7 +60,7 @@ $remaining= $remainingproducts['remaining'];
                                     </div>
                                     <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center p_quantity" data-remaining=<?php echo $remaining; ?> value="<?php echo $productQuantity; ?>">
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-plus">
+                                        <button class="btn btn-sm btn-primary btn-plus" data-remaining=<?php echo $remaining; ?>>
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </div>
@@ -136,9 +138,12 @@ $remaining= $remainingproducts['remaining'];
        $(".btn-plus").on('click', function(){
             var quantityInput = $(this).closest(".quantity").find(".p_quantity");       
             var currentQuantity = parseInt(quantityInput.val());
-            var remaining = parseInt(quantityInput.data(remaining));
+            
+            var remaining = quantityInput.data('remaining');
+            alert(remaining);
             if(isNaN(currentQuantity)) currentQuantity = 0;
-            if(currentQuantity >= remaining) {
+            if(remaining <= currentQuantity){ 
+                alert('Cannot add more than available stock');
                 return;
             }
             quantityInput.val(currentQuantity + 1).change();
@@ -155,7 +160,7 @@ $remaining= $remainingproducts['remaining'];
         
         $(".p_quantity").on('change', function(){
             var quantity = $(this).val();
-            var price = $(this).closest("tr").find(".price").text();
+            var price = $(this).closeurrentQuantity >st("tr").find(".price").text();
             price = parseFloat(price);
             quantity = parseInt(quantity);
             var total = quantity * price;
