@@ -4,12 +4,19 @@ include('layout/header.php');
 $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,cart.total as total, products.p_name as name, products.p_price as price,products.image as image  from cart inner join products on cart.product_id=products.id where cart.user_id='$_SESSION[id]'";
 $cartResult = mysqli_query($conn, $cartQuery);
 
+$user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+$CountQuery = "SELECT COUNT(*) AS count FROM cart WHERE user_id='$user_id'";
+$CountResult = mysqli_query($conn, $CountQuery);
+$CountRow = mysqli_fetch_assoc($CountResult);
+$Count = $CountRow['count'];
+
 if(isset($_GET['message'])){ 
    $msg="Order placed successfully!";
 }
 ?>
  <!-- Checkout Start -->
     <div class="container-fluid">
+        <?php if($Count > 0){ ?>
         <div class="row px-xl-5">
             <form action="proceed_to_checkout.php" method="post">
                 <div class="row">
@@ -128,6 +135,14 @@ if(isset($_GET['message'])){
                 </div>
             </form>
         </div>
+         <?php } else { ?>
+        <div class="container">
+            <div class="text-center py-5">
+            <h2>Your Cart is Empty!</h2>
+            <p>Add items to your cart before checking out.</p>
+            </div>
+        </div>
+        <?php } ?>
     </div>
 
     

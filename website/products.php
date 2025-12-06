@@ -95,6 +95,8 @@ $total_pages = ceil($total_records / $limit);
 $query = "SELECT * FROM products $where LIMIT $start_from, $limit";
 $result = mysqli_query($conn, $query);
 
+$quantityrange= "SELECT * FROM products $where";
+$quantity_result = mysqli_query($conn, $quantityrange);
 ?>
  <!-- Shop Start -->
     <div class="container-fluid">
@@ -105,9 +107,7 @@ $result = mysqli_query($conn, $query);
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by price</span></h5>
                 <div class="bg-light p-4 mb-30">
                     <form action="products.php" method="get" onchange="this.submit()">
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox"  class="custom-control-input" name="price" <?= (isset($_GET['price']) && $_GET['price'] == 'all') ? 'checked' : '' ?> id="price-all" value="all">
-                             <?php if (isset($_GET['cat_id'])) { ?>
+                            <?php if (isset($_GET['cat_id'])) { ?>
                                 <input type="hidden" name="cat_id" value="<?= $_GET['cat_id'] ?>">
                             <?php } ?>
                             <?php if (isset($_GET['sub_cat'])) { ?>
@@ -115,34 +115,31 @@ $result = mysqli_query($conn, $query);
                             <?php } ?>
                              <?php if (isset($_GET['search'])) { ?>
                                 <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search']) ?>">    
-                            <?php } ?>
-                            <label class="custom-control-label" for="price-all">All Price</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
+                            <?php } ?>                          
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '0-1000') ? 'checked' : '' ?>  class="custom-control-input" id="price-1" value="0-1000">
-                            <label class="custom-control-label" for="price-1">$0 - $100</label>
-                            <span class="badge border font-weight-normal">150</span>
+                            <label class="custom-control-label" for="price-1">0 - 1000</label>
+                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '1000-2000') ? 'checked' : '' ?> class="custom-control-input" id="price-2" value="1000-2000">
-                            <label class="custom-control-label" for="price-2">$100 - $200</label>
-                            <span class="badge border font-weight-normal">295</span>
+                            <label class="custom-control-label" for="price-2">1000 - 2000</label>
+                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '2000-3000') ? 'checked' : '' ?> class="custom-control-input" id="price-3" value="2000-3000">
-                            <label class="custom-control-label" for="price-3">$200 - $300</label>
-                            <span class="badge border font-weight-normal">246</span>
+                            <label class="custom-control-label" for="price-3">2000 - 3000</label>
+                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '3000-4000') ? 'checked' : '' ?> class="custom-control-input" id="price-4" value="3000-4000">
-                            <label class="custom-control-label" for="price-4">$300 - $400</label>
-                            <span class="badge border font-weight-normal">145</span>
+                            <label class="custom-control-label" for="price-4">3000 - 4000</label>
+                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
                             <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '4000-5000') ? 'checked' : '' ?> class="custom-control-input" id="price-5" value="4000-5000">
-                            <label class="custom-control-label" for="price-5">$400 - $500</label>
-                            <span class="badge border font-weight-normal">168</span>
+                            <label class="custom-control-label" for="price-5">4000 - 5000</label>
+                            <span class="badge border font-weight-normal"><?php echo mysqli_num_rows($quantity_result)?></span>
                         </div>
                     </form>
                 </div>

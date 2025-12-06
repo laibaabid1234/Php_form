@@ -1,10 +1,16 @@
 <?php
 include('layout/header.php');
+$user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+$wishlistCountQuery = "SELECT COUNT(*) AS count FROM wishlist WHERE user_id='$user_id'";
+$wishlistCountResult = mysqli_query($conn, $wishlistCountQuery);
+$wishlistCountRow = mysqli_fetch_assoc($wishlistCountResult);
+$wishlistCount = $wishlistCountRow['count'];
 ?>
 
   <!-- wishlist Start -->
    
     <div class="container-fluid">
+         <?php if($wishlistCount > 0){ ?>
         <div class="row px-xl-5">
             <div class="col-lg-8 table-responsive mb-5">
                 <table class="table table-light table-borderless table-hover text-center mb-0">
@@ -47,6 +53,13 @@ include('layout/header.php');
             </div>
            
         </div>
+        <?php } else { ?>
+        <div class="container">
+                <div class="text-center py-5">
+                <h2>Your wishlist is empty.</h2>
+                </div>
+            </div>
+        <?php } ?>
     </div>
     <!-- wishlist End -->
 <script>

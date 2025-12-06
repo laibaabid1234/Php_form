@@ -1,8 +1,24 @@
 <?php
 include('layout/header.php');
+$user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+$cartCountQuery = "SELECT COUNT(*) AS count FROM cart WHERE user_id='$user_id'";
+$cartCountResult = mysqli_query($conn, $cartCountQuery);
+$cartCountRow = mysqli_fetch_assoc($cartCountResult);
+$cartCount = $cartCountRow['count'];
+
+$query = "SELECT * FROM products";
+$result = mysqli_query($conn, $query);
+$row = $result->fetch_assoc();
+$productId = $row['id'];
+
+$query="SELECT remaining FROM products where id= $productId";
+$remainingquery = $conn->query($query);
+$remainingproducts = $remainingquery->fetch_assoc();
+$remaining= $remainingproducts['remaining'];  
 ?>
   <!-- Cart Start -->
     <div class="container-fluid">
+         <?php if($cartCount > 0){ ?>
         <div class="row px-xl-5">
             <div class="col-lg-8 table-responsive mb-5">
                 <table class="table table-light table-borderless table-hover text-center mb-0">
@@ -40,7 +56,7 @@ include('layout/header.php');
                                         <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center p_quantity" value="<?php echo $productQuantity; ?>">
+                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center p_quantity" data-remaining=<?php echo $remaining; ?> value="<?php echo $productQuantity; ?>">
                                     <div class="input-group-btn">
                                         <button class="btn btn-sm btn-primary btn-plus">
                                             <i class="fa fa-plus"></i>
@@ -88,6 +104,13 @@ include('layout/header.php');
                 </div>
             </div>
         </div>
+        <?php } else { ?>
+            <div class="container">
+                <div class="text-center py-5">
+                <h2>Your cart is empty.</h2>
+                </div>
+            </div>
+        <?php } ?>
     </div>
     <!-- Cart End -->
 
@@ -111,9 +134,13 @@ include('layout/header.php');
 
 
        $(".btn-plus").on('click', function(){
-            var quantityInput = $(this).closest(".quantity").find(".p_quantity");
+            var quantityInput = $(this).closest(".quantity").find(".p_quantity");       
             var currentQuantity = parseInt(quantityInput.val());
+            var remaining = parseInt(quantityInput.data(remaining));
             if(isNaN(currentQuantity)) currentQuantity = 0;
+            if(currentQuantity >= remaining) {
+                return;
+            }
             quantityInput.val(currentQuantity + 1).change();
         });
 
