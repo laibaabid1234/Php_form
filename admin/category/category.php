@@ -1,5 +1,10 @@
 <?php
 include('../../connection.php');
+
+$limit = 4;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start_from = ($page - 1) * $limit;
+
 if(!isset($_SESSION['user_name']))
 {
     header("Location: ../../login.php");
@@ -96,12 +101,24 @@ else if(isset($_GET['id'])&& $_GET['id']!=null)
     $row=mysqli_fetch_assoc($category);
 }
 else if (isset($_POST['delete']) && isset($_POST['id']) && $_POST['id'] != null) {
-    $id = $_POST['id'];
-    $delquery = "DELETE FROM category WHERE id = $id";
-    $data=mysqli_query($conn,$delquery);
-    if($data){
+    $Id = $_POST['id'];
+
+    $subQuery = "SELECT * FROM sub_category WHERE cat_id = $Id";
+    $subResult = mysqli_query($conn, $subQuery);
+
+    $prodQuery = "SELECT * FROM products WHERE cat_id = $Id";
+    $prodResult = mysqli_query($conn, $prodQuery);
+
+    if (mysqli_num_rows($subResult) > 0 || mysqli_num_rows($prodResult) > 0) {
+       $msg2 = "First delete related subcategories and products."; 
+    }
+    else{
+    $delquery = "DELETE FROM category WHERE id = $Id";
+    $data=mysqli_query($conn,$delquery); 
+      if($data){
        $msg="Record has been deleted";
     }
+  }  
 }
 else if(isset($_POST['add']) && isset($_POST['name']) && $_POST['name']!= null){
     $name = $_POST['name'];
@@ -134,14 +151,19 @@ else if(isset($_POST['add']) && isset($_POST['name']) && $_POST['name']!= null){
     }
 }
 
+$countquery = "SELECT COUNT(id) AS total FROM category";
+$count_result = mysqli_query($conn, $countquery);
+$count_row = mysqli_fetch_assoc($count_result);
+$total_records = $count_row['total'];
+$total_pages = ceil($total_records / $limit);
+
+$query1="SELECT * from category LIMIT $start_from, $limit";
+$category=mysqli_query($conn,$query1);
+
 echo "<script>
 if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
-}
-</script>";
-$query1="select * from category";
-$category=mysqli_query($conn,$query1);
-
+} </script>";
 ?>
  <!-- [ breadcrumb ] start -->
         <!-- <div class="page-header">
@@ -173,6 +195,14 @@ $category=mysqli_query($conn,$query1);
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php } ?>
+
+             <?Php if(isset($msg2) && $msg2 != ""){?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <?php echo $msg2 ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php } ?>
+
           
          <!-- Zero config table start -->
           <div class="col-sm-12">
@@ -258,6 +288,45 @@ $category=mysqli_query($conn,$query1);
                     </tbody>
                   </table>
                    <!-- Table end -->
+                        <?php if($total_pages > 1){ ?>
+                    <div class="col-12">
+                        <nav>
+                           <ul class="pagination justify-content-center">
+                                <?php
+                                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                                ?>
+
+                                <!-- Previous Button -->
+                                <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                                    <a class="page-link"
+                                    href="category.php?page=<?php echo ($page - 1)?>">
+                                    Previous
+                                    </a>
+                                </li> 
+
+                                <!-- Page Numbers -->
+                                <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                                    <li class="page-item <?php echo ($page == $i) ? 'active' : ''; ?>">
+                                        <a class="page-link"
+                                        href="category.php?page=<?php echo $i ?>">
+                                        <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+
+                                <!-- Next Button -->
+                                <li class="page-item <?php echo ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                                    <a class="page-link"
+                                    href="category.php?page=<?php echo ($page + 1) ?>">
+                                    Next
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </nav>
+                        </div>
+                    <?php } ?>
                 </div>
               </div>
             </div>

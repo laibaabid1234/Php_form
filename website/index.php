@@ -139,13 +139,14 @@ include('layout/header.php');
             $query="SELECT remaining FROM products where id= $productId";
             $remainingquery = $conn->query($query);
             $remainingproducts = $remainingquery->fetch_assoc();
-            $remaining= $remainingproducts['remaining'];  
-            if($remaining > 0){ ?>
+            $remaining= $remainingproducts['remaining'];  ?>           
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
                         <img class="img-fluid w-100" src="../admin/<?php echo $productImage?>" alt="" style="width:100%; height:250px; object-fit:cover;">
                         <div class="product-action">
+                             <?php if($remaining > 0){ ?>
                             <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" ><i class="fa fa-shopping-cart"></i></a>
+                            <?php }  ?>
                             <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>"><i class="far fa-heart"></i></a>
                         </div>
                     </div>
@@ -154,7 +155,11 @@ include('layout/header.php');
                         <div class="d-flex align-items-center justify-content-center mt-2">
                             <h5>$123.00</h5><h6 class="text-muted ml-2"></h6>
                         </div>
-                        <p class="text-success">In stock</p>
+                         <?php if($remaining > 0){ ?>
+                            <p class="text-success">In stock</p>
+                        <?php } else { ?>
+                            <p class="text-danger">Out of stock</p>
+                        <?php } ?>                 
                         <div class="d-flex align-items-center justify-content-center mb-1">
                             <small class="fa fa-star text-primary mr-1"></small>
                             <small class="fa fa-star text-primary mr-1"></small>
@@ -165,31 +170,6 @@ include('layout/header.php');
                         </div>
                     </div>
                 </div>
-            <?php } else{ ?>
-                <div class="product-item bg-light mb-4">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" src="../admin/<?php echo $productImage?>" alt="" style="width:100%; height:250px; object-fit:cover;">
-                        <div class="product-action">
-                        <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>"><i class="far fa-heart"></i></a>
-                        </div>
-                    </div>
-                    <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href=""><?php echo "$productName" ?></a>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5>$123.00</h5><h6 class="text-muted ml-2"></h6>
-                        </div>
-                        <p class="text-muted">Out of stock</p>
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <!-- <small>(99)</small> -->
-                        </div>
-                    </div>
-                </div>
-            <?php } ?>
             </div>
             <?php } ?>
         </div>
@@ -249,7 +229,9 @@ include('layout/header.php');
                     <div class="product-img position-relative overflow-hidden">
                         <img class="img-fluid w-100" src="../admin/<?php echo $productImage ?>" alt="" style="width:100%; height:250px; object-fit:cover;">
                         <div class="product-action">
+                            <?php if($remaining > 0){ ?>
                             <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" ><i class="fa fa-shopping-cart"></i></a>
+                            <?php }  ?>
                             <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>"><i class="far fa-heart"></i></a>        
                         </div>
                     </div>
@@ -258,7 +240,11 @@ include('layout/header.php');
                         <div class="d-flex align-items-center justify-content-center mt-2">
                             <h5><?php echo $productPrice ?></h5><h6 class="text-muted ml-2"></h6>
                         </div>
-                         <p class="text-success">In stock</p>
+                          <?php if($remaining > 0){ ?>
+                            <p class="text-success">In stock</p>
+                          <?php } else { ?>
+                            <p class="text-danger">Out of stock</p>
+                          <?php } ?>
                         <div class="d-flex align-items-center justify-content-center mb-1">
                             <small class="fa fa-star text-primary mr-1"></small>
                             <small class="fa fa-star text-primary mr-1"></small>
@@ -268,30 +254,7 @@ include('layout/header.php');
                         </div>
                     </div>
                 </div>
-            <?php } else { ?>
-                 <div class="product-item bg-light mb-4">
-                    <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" src="../admin/<?php echo $productImage ?>" alt="">
-                        <div class="product-action">
-                            <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" ><i class="fa fa-shopping-cart"></i></a>
-                        </div>
-                    </div>
-                    <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href=""><?php echo $productName ?></a>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5><?php echo $productPrice ?></h5><h6 class="text-muted ml-2"></h6>
-                        </div>
-                        <p class="text-muted">Out of stock</p>
 
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>                          
-                        </div>
-                    </div>
-                </div>
             <?php } ?>
             </div>
             <?php } ?>

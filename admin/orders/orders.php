@@ -1,5 +1,10 @@
 <?php
 include('../../connection.php');
+
+$limit = 4;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start_from = ($page - 1) * $limit;
+
 if(!isset($_SESSION['user_name']))
 {
     header("Location: ../../login.php");
@@ -21,11 +26,18 @@ if(isset($_POST['status']) && $_POST['status'] != null){
     exit();
 }
 
+// count total rows
+$countquery = "SELECT COUNT(id) AS total FROM orders";
+$count_result = mysqli_query($conn, $countquery);
+$count_row = mysqli_fetch_assoc($count_result);
+$total_records = $count_row['total'];
+$total_pages = ceil($total_records / $limit);
+
 $basePath = '../';
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
 
-$ordersQuery = "SELECT * FROM orders";
+$ordersQuery = "SELECT * FROM orders LIMIT $start_from, $limit";
 $orders = mysqli_query($conn, $ordersQuery);
 
 ?>
@@ -35,7 +47,7 @@ $orders = mysqli_query($conn, $ordersQuery);
           <div class="col-sm-12">
             <div class="card">
               <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-3">Otders Table</h5>
+                <h5 class="mb-3">Orders Table</h5>
                 <!-- <a href="add_products.php" class="btn btn-primary">Add New</a> -->
               </div>
             <!-- Table start -->
@@ -103,6 +115,45 @@ $orders = mysqli_query($conn, $ordersQuery);
 
             </tbody>
         </table>
+           <?php if($total_pages > 1){ ?>
+                    <div class="col-12">
+                       <nav>
+                           <ul class="pagination justify-content-center">
+                                <?php
+                                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                                ?>
+
+                                <!-- Previous Button -->
+                                <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                                    <a class="page-link"
+                                    href="orders.php?page=<?php echo ($page - 1)?>">
+                                    Previous
+                                    </a>
+                                </li> 
+
+                                <!-- Page Numbers -->
+                                <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                                    <li class="page-item <?php echo ($page == $i) ? 'active' : ''; ?>">
+                                        <a class="page-link"
+                                        href="orders.php?page=<?php echo $i ?>">
+                                        <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+
+                                <!-- Next Button -->
+                                <li class="page-item <?php echo ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                                    <a class="page-link"
+                                    href="orders.php?page=<?php echo ($page + 1) ?>">
+                                    Next
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </nav>
+                        </div>
+                    <?php } ?>
     </div>
 </div>
 <?php 

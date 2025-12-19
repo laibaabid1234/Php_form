@@ -140,7 +140,6 @@ $productId = $row['id'];
             var currentQuantity = parseInt(quantityInput.val());
             
             var remaining = quantityInput.data('remaining');
-            alert(remaining);
             if(isNaN(currentQuantity)) currentQuantity = 0;
             if(remaining <= currentQuantity){ 
                 alert('Cannot add more than available stock');
@@ -160,7 +159,7 @@ $productId = $row['id'];
         
         $(".p_quantity").on('change', function(){
             var quantity = $(this).val();
-            var price = $(this).closeurrentQuantity >st("tr").find(".price").text();
+            var price = $(this).closest("tr").find(".price").text();
             price = parseFloat(price);
             quantity = parseInt(quantity);
             var total = quantity * price;

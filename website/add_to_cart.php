@@ -12,13 +12,13 @@ if(isset($_POST['cartUpdate']) && $_POST['cartUpdate'] == true){
     $cart_id = $_POST['product_Id'];
     $quantity = $_POST['productQuantity'];
     $price = $_POST['price'];
-    $total=$quantity* $price;
+    $total= $quantity * $price;
 
     if(!$user_id){
         echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
         exit;
-    }
-
+    } 
+                                                                                               
     $updateQuery = "UPDATE cart SET quantity='$quantity',price='$price',total='$total' WHERE id='$cart_id'";
     if(mysqli_query($conn, $updateQuery)){
         echo json_encode(['status' => 'success', 'message' => 'Cart updated successfully']);

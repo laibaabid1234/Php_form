@@ -1,5 +1,10 @@
 <?php
 include('../../connection.php');
+
+$limit = 6;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$start_from = ($page - 1) * $limit; 
+
 if(!isset($_SESSION['user_name']))
 {
     header("Location: ../../login.php");
@@ -40,7 +45,7 @@ if(isset($_POST['featuredId']) && $_POST['featuredId'] != null){
     $featuredId = $featuredRow['is_featured'];
     if($featuredId==0){
       $featuredId=1;
-    }else{
+    }else{                                      
       $featuredId=0;
     }
     $updatefeaturedQuery = "UPDATE products SET is_featured = $featuredId WHERE id = $Id";
@@ -139,8 +144,16 @@ else if(isset($_POST['add']) && isset($_POST['p_name']) && $_POST['p_name']!= nu
         $msg="New record has been submitted";
     }
 }
+
+// count total rows
+$countquery = "SELECT COUNT(id) AS total FROM products";
+$count_result = mysqli_query($conn, $countquery);
+$count_row = mysqli_fetch_assoc($count_result);
+$total_records = $count_row['total'];
+$total_pages = ceil($total_records / $limit);
+
 $query1="SELECT products.id AS p_id, products.p_name,products.image as image,products.quantity as quantity, category.name AS cat_name, sub_category.name AS sub_name,products.p_price as p_price, products.is_featured as is_featured, products.status as status FROM products INNER JOIN 
-sub_category ON sub_category.id=products.subcat_id INNER JOIN category ON category.id=products.cat_id";
+sub_category ON sub_category.id=products.subcat_id INNER JOIN category ON category.id=products.cat_id LIMIT $start_from, $limit";
 $products=mysqli_query($conn,$query1);
 
 echo "<script>
@@ -192,7 +205,7 @@ if (window.history.replaceState) {
                 <div class="dt-responsive table-responsive">
                   <table id="simpletable" class="table table-striped table-bordered nowrap">
                     <thead>
-                      <tr>
+                      <tr>          
                         <th>Id</th>
                         <th>Name</th>
                         <th>Price</th>
@@ -215,10 +228,10 @@ if (window.history.replaceState) {
                       <td><?php echo $row['sub_name'] ?></td> 
                       <td><?php echo $row['quantity'] ?></td> 
                       <td><img src="../<?php echo $row['image']; ?>" alt="" width="100px" ></td>         
-                      <td> 
+                      <td class="d-flex flex-wrap gap-1"> 
                           <a href="edit_products.php?p_id=<?php echo $row['p_id'] ?>" class="btn btn-warning">Edit</a>
                           <form action="products.php" method="post" style="display:inline;">
-                            <input type="hidden" name="p_id" value="<?php echo $row['p_id'] ?>">
+                            <input type="hidden" name="id" value="<?php echo $row['p_id'] ?>">
                             <button type="submit" name="delete"  class="btn btn-danger">Delete</button>
                           </form>
                        </td> 
@@ -238,6 +251,45 @@ if (window.history.replaceState) {
                     </tbody>
                   </table>
                    <!-- Table end -->
+                    <?php if($total_pages > 1){ ?>
+                    <div class="col-12">
+                       <nav>
+                           <ul class="pagination justify-content-center">
+                                <?php
+                                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                                ?>
+
+                                <!-- Previous Button -->
+                                <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                                    <a class="page-link"
+                                    href="products.php?page=<?php echo ($page - 1)?>">
+                                    Previous
+                                    </a>
+                                </li> 
+
+                                <!-- Page Numbers -->
+                                <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                                    <li class="page-item <?php echo ($page == $i) ? 'active' : ''; ?>">
+                                        <a class="page-link"
+                                        href="products.php?page=<?php echo $i ?>">
+                                        <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+
+                                <!-- Next Button -->
+                                <li class="page-item <?php echo ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                                    <a class="page-link"
+                                    href="products.php?page=<?php echo ($page + 1) ?>">
+                                    Next
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </nav>
+                        </div>
+                    <?php } ?>
                 </div>
               </div>
             </div>

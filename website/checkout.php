@@ -16,17 +16,17 @@ if(isset($_GET['message'])){
 ?>
  <!-- Checkout Start -->
     <div class="container-fluid">
+        <?php if(isset($_GET['message'])){ ?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">                  
+            <?php echo $msg ?>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>                  
+            </div>
+        <?php } ?>
         <?php if($Count > 0){ ?>
         <div class="row px-xl-5">
             <form action="proceed_to_checkout.php" method="post">
                 <div class="row">
                 <div class="col-lg-8">
-                    <?php if(isset($_GET['message'])){ ?>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">                  
-                    <?php echo $msg ?>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>                  
-                    </div>
-                    <?php } ?>
                     <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Billing Address</span></h5>
                     <div class="bg-light p-30 mb-5">
                         <div class="row">                   

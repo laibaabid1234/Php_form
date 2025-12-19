@@ -86,129 +86,53 @@ function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
                                 <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search']) ?>">    
                             <?php } ?>                          
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '0-1000') ? 'checked' : '' ?>  class="custom-control-input" id="price-1" value="0-1000">
+                            <input type="radio" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '0-1000') ? 'checked' : '' ?>  class="custom-control-input" id="price-1" value="0-1000">
                             <label class="custom-control-label" for="price-1">0 - 1000</label>
                             <span class="badge border font-weight-normal">
-                                                                <?php 
-                                                                    countProducts($conn, 0, 1000, $base_where);
-                                                                ?>
+                                <?php 
+                                countProducts($conn, 0, 1000, $base_where);
+                                ?>
                             </span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '1000-2000') ? 'checked' : '' ?> class="custom-control-input" id="price-2" value="1000-2000">
+                            <input type="radio" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '1000-2000') ? 'checked' : '' ?> class="custom-control-input" id="price-2" value="1000-2000">
                             <label class="custom-control-label" for="price-2">1000 - 2000</label>
                             <span class="badge border font-weight-normal">
-                                                             <?php 
-                                                                    countProducts($conn, 1000, 2000, $base_where);
-                                                                ?>
+                                <?php 
+                                countProducts($conn, 1000, 2000, $base_where);
+                                ?>
                             </span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '2000-3000') ? 'checked' : '' ?> class="custom-control-input" id="price-3" value="2000-3000">
+                            <input type="radio" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '2000-3000') ? 'checked' : '' ?> class="custom-control-input" id="price-3" value="2000-3000">
                             <label class="custom-control-label" for="price-3">2000 - 3000</label>
                             <span class="badge border font-weight-normal">
-                                                                <?php 
-                                                                    countProducts($conn, 2000, 3000, $base_where);
-                                                                ?>
+                                <?php 
+                                countProducts($conn, 2000, 3000, $base_where);
+                                ?>
                             </span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '3000-4000') ? 'checked' : '' ?> class="custom-control-input" id="price-4" value="3000-4000">
+                            <input type="radio" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '3000-4000') ? 'checked' : '' ?> class="custom-control-input" id="price-4" value="3000-4000">
                             <label class="custom-control-label" for="price-4">3000 - 4000</label>
                             <span class="badge border font-weight-normal">
-                                                             <?php 
-                                                                    countProducts($conn, 3000, 4000, $base_where);
-                                                                ?>
+                                <?php 
+                                countProducts($conn, 3000, 4000, $base_where);
+                                ?>
                             </span>
                         </div>
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '4000-5000') ? 'checked' : '' ?> class="custom-control-input" id="price-5" value="4000-5000">
+                            <input type="radio" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '4000-5000') ? 'checked' : '' ?> class="custom-control-input" id="price-5" value="4000-5000">
                             <label class="custom-control-label" for="price-5">4000 - 5000</label>
                             <span class="badge border font-weight-normal">
-                                                             <?php 
-                                                                    countProducts($conn, 4000, 5000, $base_where);
-                                                                ?>
+                                <?php 
+                                countProducts($conn, 4000, 5000, $base_where);
+                                ?>
                             </span>
                         </div>
                     </form>
                 </div>
                 <!-- Price End -->
-                
-                <!-- Color Start -->
-                <!-- <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by color</span></h5>
-                <div class="bg-light p-4 mb-30">
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="color-all">
-                            <label class="custom-control-label" for="price-all">All Color</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-1">
-                            <label class="custom-control-label" for="color-1">Black</label>
-                            <span class="badge border font-weight-normal">150</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-2">
-                            <label class="custom-control-label" for="color-2">White</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-3">
-                            <label class="custom-control-label" for="color-3">Red</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="color-4">
-                            <label class="custom-control-label" for="color-4">Blue</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="color-5">
-                            <label class="custom-control-label" for="color-5">Green</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                    </form>
-                </div> -->
-                <!-- Color End -->
-
-                <!-- Size Start -->
-                <!-- <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by size</span></h5>
-                <div class="bg-light p-4 mb-30">
-                    <form>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" checked id="size-all">
-                            <label class="custom-control-label" for="size-all">All Size</label>
-                            <span class="badge border font-weight-normal">1000</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-1">
-                            <label class="custom-control-label" for="size-1">XS</label>
-                            <span class="badge border font-weight-normal">150</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-2">
-                            <label class="custom-control-label" for="size-2">S</label>
-                            <span class="badge border font-weight-normal">295</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-3">
-                            <label class="custom-control-label" for="size-3">M</label>
-                            <span class="badge border font-weight-normal">246</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                            <input type="checkbox" class="custom-control-input" id="size-4">
-                            <label class="custom-control-label" for="size-4">L</label>
-                            <span class="badge border font-weight-normal">145</span>
-                        </div>
-                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                            <input type="checkbox" class="custom-control-input" id="size-5">
-                            <label class="custom-control-label" for="size-5">XL</label>
-                            <span class="badge border font-weight-normal">168</span>
-                        </div>
-                    </form>
-                </div> -->
-                <!-- Size End -->
             </div>
             <!-- Shop Sidebar End -->
 
@@ -288,11 +212,7 @@ function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
                                     <small class="fa fa-star text-primary mr-1"></small>
                                 </div>
                             </div>
-                        </div>
-                   
-  
-
-                                
+                        </div>                            
                     </div>
                     <?php } ?>
                     <?php } ?>
