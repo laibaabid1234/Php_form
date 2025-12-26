@@ -1,28 +1,50 @@
 <?php
 include('layout/header.php');
+
+if (isset($_POST['contact']) && isset($_POST['name']) && $_POST['name'] != null) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $subject = $_POST['subject'];
+    $message = $_POST['message'];
+    $insertquery = "INSERT INTO contact (name, email, subject, message) VALUES ('$name','$email','$subject','$message')";
+    $data=mysqli_query($conn,$insertquery);
+    if($data){
+       $msg="Your message has been sent!";
+    }
+}
+echo "<script>
+if (window.history.replaceState) {
+  window.history.replaceState(null, null, window.location.href);
+}
+</script>";
 ?>
  <!-- Contact Start -->
     <div class="container-fluid">
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Contact Us</span></h2>
         <div class="row px-xl-5">
             <div class="col-lg-7 mb-5">
+                 <?Php if(isset($data)&& $data!=null){?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <?php echo $msg ?>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>                  
+                </div>
+            <?php } ?>
                 <div class="bg-light p-30">
-                    <h4 class="mb-4">Receive messages instantly with our PHP and Ajax contact form - available in the <a href="https://htmlcodex.com/downloading/?item=1479">Pro Version</a> only.</h4>
-                    <form>
+                    <form action="contact.php" method="post">
                         <div class="control-group mb-3">
-                            <input type="text" class="form-control" placeholder="Your Name"/>
+                            <input type="text" class="form-control" name="name" placeholder="Your Name" required/>
                         </div>
                         <div class="control-group mb-3">
-                            <input type="email" class="form-control" placeholder="Your Email"/>
+                            <input type="email" class="form-control" name="email" placeholder="Your Email" required/>
                         </div>
                         <div class="control-group mb-3">
-                            <input type="text" class="form-control" placeholder="Subject"/>
+                            <input type="text" class="form-control" name="subject" placeholder="Subject" required/>
                         </div>
                         <div class="control-group mb-3">
-                            <textarea class="form-control" rows="8" placeholder="Message"></textarea>
+                            <textarea class="form-control" rows="8" name="message" placeholder="Message" required></textarea>
                         </div>
                         <div>
-                            <button class="btn btn-primary py-2 px-4" type="submit">Send
+                            <button class="btn btn-primary py-2 px-4" type="submit" name="contact">Send
                                 Message</button>
                         </div>
                     </form>

@@ -1,7 +1,7 @@
 <?php
 include('../../connection.php');
 
-$limit = 4;
+$limit = 2;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start_from = ($page - 1) * $limit;
 
@@ -18,8 +18,8 @@ if(isset($_POST['status']) && $_POST['status'] != null){
     $statusChanged = mysqli_query($conn, $updateStatusQuery);
     if($statusChanged){
       $statusMessage = "Order status updated successfully";
-     
-    }else{
+    }
+    else{
       $statusMessage = "Order status not updated";
     }   
     echo json_encode(['statusmessage' => $statusMessage]);
@@ -78,7 +78,7 @@ $orders = mysqli_query($conn, $ordersQuery);
             while ($row = mysqli_fetch_assoc($orders)) { 
                 $modalIDs[] = $row['id'];  // store order id for later modal creation
             ?>
-            
+
                 <tr>
                     <td><?= $row['id'] ?></td>
                     <td><?= $row['first_name'] . " " . $row['last_name'] ?></td>
@@ -88,7 +88,6 @@ $orders = mysqli_query($conn, $ordersQuery);
                     <td><?= $row['city'] ?></td>
                     <td><?= $row['zip'] ?></td>
                     <td><?= $row['total_amount'] ?></td>
-
                     <td>
                         <button type="button"
                             class="btn btn-info btn-sm"
@@ -97,7 +96,6 @@ $orders = mysqli_query($conn, $ordersQuery);
                             View
                         </button>
                     </td>
-
                     <td>
                         <select name="status" 
                                 class="form-select form-select-sm status"
@@ -162,7 +160,8 @@ foreach ($modalIDs as $orderId) {
 
     // fetch order items
     $orderDetailsQuery = "
-        SELECT * FROM order_items oi
+        SELECT p.p_name as p_name,p.p_price as p_price,oi.total as 
+        total,oi.quantity as quantity FROM order_items oi
         INNER JOIN products p ON oi.product_id = p.id
         WHERE oi.order_id = $orderId
     ";
@@ -179,7 +178,6 @@ foreach ($modalIDs as $orderId) {
                 </div>
 
                 <div class="modal-body">
-
                     <table class="table table-bordered">
                         <thead>
                             <tr>

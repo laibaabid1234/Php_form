@@ -104,13 +104,6 @@
           </a>
 
       </ul>
-      <div class="card text-center">
-        <div class="card-body">
-          <img src="<?php echo $basePath; ?>assets/images/img-navbar-card.png" alt="images" class="img-fluid mb-2">
-          <h5>Upgrade To Pro</h5>
-          <p>To get more features and components</p>
-        </div>
-      </div>
     </div>
   </div>
 </nav>
