@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
-                        <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
+                        <!-- <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
                         <form action="">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Your Email Address">
@@ -39,13 +39,13 @@
                                     <button class="btn btn-primary">Sign Up</button>
                                 </div>
                             </div>
-                        </form>
-                        <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
+                        </form> -->
+                        <h5 class="text-secondary text-uppercase mb-4">Follow Us</h5>
                         <div class="d-flex">
-                            <a class="btn btn-primary btn-square mr-2" href="https://x.com/"><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-primary btn-square mr-2" href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-primary btn-square mr-2" href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
-                            <a class="btn btn-primary btn-square" href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" target="_blank" href="https://x.com/"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-primary btn-square mr-2" target="_blank" href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-primary btn-square mr-2"target="_blank" href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-primary btn-square" target="_blank" href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>

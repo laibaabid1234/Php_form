@@ -12,7 +12,7 @@ $wishlistCount = $wishlistCountRow['count'];
     <div class="container-fluid">
          <?php if($wishlistCount > 0){ ?>
         <div class="row px-xl-5">
-            <div class="col-lg-8 table-responsive mb-5">
+            <div class="col-lg-12 table-responsive mb-5">
                 <table class="table table-light table-borderless table-hover text-center mb-0">
                     <thead class="thead-dark">
                         <tr>

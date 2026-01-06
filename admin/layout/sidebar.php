@@ -81,28 +81,34 @@
         </li>
          <li class="pc-item">
           <a href="<?php echo $basePath; ?>category/category.php" class="pc-link">
-            <span class="pc-micon"><i class="ti ti-users"></i></span>
+            <span class="pc-micon"><i class="ti ti-apps"></i></span>
             <span class="pc-mtext">Category</span>
           </a>
         </li>
         <li class="pc-item">
           <a href="<?php echo $basePath; ?>sub_category/sub_category.php" class="pc-link">
-            <span class="pc-micon"><i class="ti ti-users"></i></span>
+            <span class="pc-micon"><i class="ti ti-float-center"></i></span>
             <span class="pc-mtext">Sub Category</span>
           </a>
         </li>
         <li class="pc-item">
           <a href="<?php echo $basePath; ?>products/products.php" class="pc-link">
-            <span class="pc-micon"><i class="ti ti-users"></i></span>
+            <span class="pc-micon"><i class="ti ti-box"></i></span>
             <span class="pc-mtext">Products</span>
           </a>
         </li>
         <li class="pc-item">
           <a href="<?php echo $basePath; ?>orders/orders.php" class="pc-link">
-            <span class="pc-micon"><i class="ti ti-users"></i></span>
+            <span class="pc-micon"><i class="ti ti-shopping-cart-discount"></i></span>
             <span class="pc-mtext">Orders</span>
           </a>
-
+        </li>
+        <li class="pc-item">
+          <a href="<?php echo $basePath; ?>contact/contact.php" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-phone"></i></span>
+            <span class="pc-mtext">Contact</span>
+          </a>
+        </li>
       </ul>
     </div>
   </div>

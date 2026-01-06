@@ -59,6 +59,18 @@ if(isset($_POST['featuredId']) && $_POST['featuredId'] != null){
     exit();
   
 }
+
+if(isset($_POST['p_id'], $_POST['discount'])){
+    $Id = $_POST['p_id'];
+    $discount = $_POST['discount'];
+    if($discount < 0 || $discount > 90){
+      $discountmsg="Discount value must be between 0 and 90";
+      return;
+    }
+    $updatedQuery = "UPDATE products SET discount = $discount WHERE id = $Id";
+    $discountchanged=mysqli_query($conn, $updatedQuery);
+    exit();
+    }
 $basePath = '../';
 include('../layout/sidebar.php');
 include('../layout/navbar.php');
@@ -136,7 +148,7 @@ else if(isset($_POST['add']) && isset($_POST['p_name']) && $_POST['p_name']!= nu
   if ($imagePath) {
     $query = "INSERT INTO products (p_name, p_price,cat_id,subcat_id,image,quantity,remaining) VALUES ('$name', '$price','$cat_id','$subcat_id','$imagePath','$quantity','$quantity')";
   } else {
-    $query = "INSERT INTO products (p_name, p_price,cat_id,subcat_id,quantity,remianing) VALUES ('$name', '$price','$cat_id','$subcat_id','$quantity','$quantity')";
+    $query = "INSERT INTO products (p_name, p_price,cat_id,subcat_id,quantity,remaining) VALUES ('$name', '$price','$cat_id','$subcat_id','$quantity','$quantity')";
   }
     $data=mysqli_query($conn,$query);
     if($data)
@@ -152,8 +164,8 @@ $count_row = mysqli_fetch_assoc($count_result);
 $total_records = $count_row['total'];
 $total_pages = ceil($total_records / $limit);
 
-$query1="SELECT products.id AS p_id, products.p_name,products.image as image,products.quantity as quantity, category.name AS cat_name, sub_category.name AS sub_name,products.p_price as p_price, products.is_featured as is_featured, products.status as status FROM products INNER JOIN 
-sub_category ON sub_category.id=products.subcat_id INNER JOIN category ON category.id=products.cat_id LIMIT $start_from, $limit";
+$query1="SELECT products.id AS p_id, products.p_name,products.image as image, products.remaining as remaining, products.discount as discount,products.quantity as quantity, category.name AS cat_name, sub_category.name AS sub_name,products.p_price as p_price, products.is_featured as is_featured, products.status as status FROM products INNER JOIN 
+sub_category ON sub_category.id=products.subcat_id INNER JOIN category ON category.id=products.cat_id order by products.id asc LIMIT $start_from, $limit";
 $products=mysqli_query($conn,$query1);
 
 echo "<script>
@@ -212,10 +224,13 @@ if (window.history.replaceState) {
                         <th>Category Name</th>
                         <th>Sub Category Name</th>
                         <th>Quantity</th>
+                        <th>Remaining</th>                    
+                        <th>Discount(%)</th>
                         <th>Image</th>
                         <th>Actions</th>          
                         <th>Status</th>
-                        <th>Is Featured</th>
+                        <th>Is Featured</th>  
+
                       </tr>
                     </thead>
                     <tbody>
@@ -227,7 +242,15 @@ if (window.history.replaceState) {
                       <td><?php echo $row['cat_name'] ?></td> 
                       <td><?php echo $row['sub_name'] ?></td> 
                       <td><?php echo $row['quantity'] ?></td> 
-                      <td><img src="../<?php echo $row['image']; ?>" alt="" width="100px" ></td>         
+                      <td><?php echo $row['remaining'] ?></td> 
+                      
+                      <td>
+                        <input type="number" class="discount" data-id="<?php echo $row['p_id']; ?>" name="discount" 
+                        min="0" max="90" value="<?php echo $row['discount']; ?>">                    
+                      </td>   
+                        <input type="hidden" name="product_id" value="<?php echo $row['p_id']; ?>">
+                      <td>
+                        <img src="../<?php echo $row['image']; ?>" alt="" width="100px" ></td>         
                       <td class="d-flex flex-wrap gap-1"> 
                           <a href="edit_products.php?p_id=<?php echo $row['p_id'] ?>" class="btn btn-warning">Edit</a>
                           <form action="products.php" method="post" style="display:inline;">
@@ -235,16 +258,17 @@ if (window.history.replaceState) {
                             <button type="submit" name="delete"  class="btn btn-danger">Delete</button>
                           </form>
                        </td> 
-                        <td>                        
+                       <td>                        
                           <div class="form-check form-switch">
-                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['p_id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch">                                              
+                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['p_id'] ?>" type="checkbox" 
+                            <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch">                                              
                           </div>                                                              
                        </td>
                        <td>
                         <div class="form-check form-switch">
                             <input class="form-check-input featured" id="featured_id" value="<?php echo $row['p_id'] ?>" type="checkbox" <?php if($row['is_featured']==1){ echo 'checked'; } ?> name="featured" role="switch">                                              
                           </div>
-                       </td>
+                       </td>                   
                     </tr>
       
                      <?php } ?>
@@ -324,7 +348,20 @@ if (window.history.replaceState) {
 
         });
     });
-  
+
+    $('.discount').on('input',function(){
+     var discount= $(this).val();
+     var productId = $(this).data('id');  
+        $.ajax({
+          url:'products.php',
+          type:'post',
+          data:{p_id:productId, discount:discount},
+          success:function(response){
+            response = JSON.parse(response);          
+          }
+
+        });
+    });
    });
 </script>
         

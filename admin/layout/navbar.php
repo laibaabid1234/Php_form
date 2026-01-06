@@ -20,7 +20,7 @@ $imagePath=$row['image'];
         <i class="ti ti-menu-2"></i>
       </a>
     </li>
-    <li class="dropdown pc-h-item d-inline-flex d-md-none">
+    <!-- <li class="dropdown pc-h-item d-inline-flex d-md-none">
       <a
         class="pc-head-link dropdown-toggle arrow-none m-0"
         data-bs-toggle="dropdown"
@@ -39,13 +39,13 @@ $imagePath=$row['image'];
           </div>
         </form>
       </div>
-    </li>
-    <li class="pc-h-item d-none d-md-inline-flex">
+    </li> -->
+    <!-- <li class="pc-h-item d-none d-md-inline-flex">
       <form class="header-search">
         <i data-feather="search" class="icon-search"></i>
         <input type="search" class="form-control" placeholder="Search here. . .">
       </form>
-    </li>
+    </li> -->
   </ul>
 </div>
 <!-- [Mobile Media Block end] -->

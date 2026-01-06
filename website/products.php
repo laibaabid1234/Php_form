@@ -8,6 +8,8 @@ $start_from = ($page - 1) * $limit;
 // base query
 $where = "WHERE 1=1";
 
+$where.=" AND status = 1";
+
 // search
 if (!empty($_GET['search'])) {
     $search = mysqli_real_escape_string($conn, $_GET['search']);
@@ -45,11 +47,10 @@ $count_row = mysqli_fetch_assoc($count_result);
 $total_records = $count_row['total'];
 $total_pages = ceil($total_records / $limit);
 
+
 // final data query
 $query = "SELECT * FROM products $where LIMIT $start_from, $limit";
 $result = mysqli_query($conn, $query);
-
-
 
 function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
     // always count items in the given price bucket, ignoring any current price filter
@@ -62,11 +63,7 @@ function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
     } else {
         echo 0;
     }
-}
-
-
-
-?>
+} ?>
  <!-- Shop Start -->
     <div class="container-fluid">
         <div class="row px-xl-5">
@@ -168,11 +165,13 @@ function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
                     </div>
                     <?php   
                     if($result && mysqli_num_rows($result)>0){
+                    
                          while ($editrow = $result->fetch_assoc()) {
                             $productId = $editrow['id'];
                             $productName = $editrow['p_name'];  
                             $productPrice = $editrow['p_price'];
-                            $productImage = $editrow['image'];                                         
+                            $productImage = $editrow['image']; 
+                            $productdiscount= $editrow['discount'];                                    
                     ?>
                     <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
                     <?php 
@@ -189,14 +188,24 @@ function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
                                     <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" ><i class="fa fa-shopping-cart"></i></a>
                                     <?php }  ?>
                                     <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>"><i class="far fa-heart"></i></a>
-                                    <!-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a> -->
                                 </div>
                             </div>
                             <div class="text-center py-4">
                                 <a class="h6 text-decoration-none text-truncate" href=""><?php echo $productName ?></a>
                                 <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5><?php echo $productPrice ?></h5><h6 class="text-muted ml-2"></h6>
+                                    <?php if(empty($productdiscount)){ ?>
+                                        <h5><?php echo number_format($productPrice) ?></h5>
+                                    <?php } else {?>                                                                   
+                                        <div class="d-flex align-items-center mt-1" style="gap:10px;">
+                                            <del class="text-muted small me-5">
+                                                Rs <?php echo number_format($productPrice); ?>
+                                            </del>
+                                            <h5 class="fw-bold fs-5">
+                                                Rs <?php echo number_format($productPrice * $productdiscount / 100); ?>
+                                            </h5>
+                                        </div>
+                                    <?php } ?>
+                                    
                                 </div>                  
                               <?php if($remaining > 0){ ?>
                                 <p class="text-success">In stock</p>
@@ -216,6 +225,7 @@ function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
                     </div>
                     <?php } ?>
                     <?php } ?>
+
                     <?php if($total_pages > 1){ ?>
                     <div class="col-12">
                         <nav>

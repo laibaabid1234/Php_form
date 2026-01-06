@@ -120,7 +120,7 @@ $count_row = mysqli_fetch_assoc($count_result);
 $total_records = $count_row['total'];
 $total_pages = ceil($total_records / $limit);
 
-$query1="select * from users LIMIT $start_from, $limit";
+$query1="select * from users order by id asc LIMIT $start_from, $limit";
 $users=mysqli_query($conn,$query1);
 
 echo "<script>

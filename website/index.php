@@ -96,7 +96,7 @@ include('layout/header.php');
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Categories</span></h2>
         <div class="row px-xl-5 pb-3">
             <?php 
-            $featuredsql = "SELECT * FROM category WHERE is_featured=1 LIMIT 4";  
+            $featuredsql = "SELECT * FROM category WHERE is_featured=1 LIMIT 4 ";  
             $featuredresult = $conn->query($featuredsql);
             while ($row = $featuredresult->fetch_assoc()) {
             $featuredId = $row['id'];
@@ -126,12 +126,13 @@ include('layout/header.php');
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Featured Products</span></h2>
         <div class="row px-xl-5">
             <?php 
-            $featuredproductsql = "SELECT * FROM products WHERE is_featured=1 LIMIT 4";  
+            $featuredproductsql = "SELECT * FROM products WHERE is_featured=1 AND remaining > 0 LIMIT 4 ";  
             $featuredproductresult = $conn->query($featuredproductsql);
             while ($row = $featuredproductresult->fetch_assoc()) {
             $productId = $row['id'];
             $productName = $row['p_name'];
             $productPrice = $row['p_price'];
+            $productdiscount = $row['discount'];
             $productImage = $row['image'];
             ?>
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
@@ -151,24 +152,36 @@ include('layout/header.php');
                         </div>
                     </div>
                     <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href=""><?php echo "$productName" ?></a>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5>$123.00</h5><h6 class="text-muted ml-2"></h6>
-                        </div>
-                         <?php if($remaining > 0){ ?>
-                            <p class="text-success">In stock</p>
-                        <?php } else { ?>
-                            <p class="text-danger">Out of stock</p>
-                        <?php } ?>                 
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <!-- <small>(99)</small> -->
-                        </div>
-                    </div>
+                                <a class="h6 text-decoration-none text-truncate" href=""><?php echo $productName ?></a>
+                                <div class="d-flex align-items-center justify-content-center mt-2">
+                                    <?php if(empty($productdiscount)){ ?>
+                                        <h5><?php echo number_format($productPrice) ?></h5>
+                                    <?php } else {?>                                                                   
+                                        <div class="d-flex align-items-center mt-1" style="gap:10px;">
+                                            <del class="text-muted small me-5">
+                                                Rs <?php echo number_format($productPrice); ?>
+                                            </del>
+                                            <h5 class="fw-bold fs-5">
+                                                Rs <?php echo number_format($productPrice * $productdiscount / 100); ?>
+                                            </h5>
+                                        </div>
+                                    <?php } ?>
+                                    
+                                </div>                  
+                              <?php if($remaining > 0){ ?>
+                                <p class="text-success">In stock</p>
+                                <?php } else { ?>
+                                    <p class="text-danger">Out of stock</p>
+                                <?php } ?>
+                            
+                                <div class="d-flex align-items-center justify-content-center mb-1">
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                </div>
+                            </div>
                 </div>
             </div>
             <?php } ?>
@@ -210,12 +223,13 @@ include('layout/header.php');
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Recent Products</span></h2>
         <div class="row px-xl-5">
             <?php 
-            $recentproductsql = "SELECT * FROM products ORDER BY id DESC LIMIT 4";  
+            $recentproductsql = "SELECT * FROM products WHERE remaining > 0 ORDER BY id DESC LIMIT 4 ";  
             $recentproductresult = $conn->query($recentproductsql);
             while ($row = $recentproductresult->fetch_assoc()) {
             $productId = $row['id'];
             $productName = $row['p_name'];
             $productPrice = $row['p_price'];
+            $productdiscount= $row['discount']; 
             $productImage = $row['image'];
             ?>
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
@@ -236,23 +250,35 @@ include('layout/header.php');
                         </div>
                     </div>
                     <div class="text-center py-4">
-                        <a class="h6 text-decoration-none text-truncate" href=""><?php echo $productName ?></a>
-                        <div class="d-flex align-items-center justify-content-center mt-2">
-                            <h5><?php echo $productPrice ?></h5><h6 class="text-muted ml-2"></h6>
-                        </div>
-                          <?php if($remaining > 0){ ?>
-                            <p class="text-success">In stock</p>
-                          <?php } else { ?>
-                            <p class="text-danger">Out of stock</p>
-                          <?php } ?>
-                        <div class="d-flex align-items-center justify-content-center mb-1">
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>
-                            <small class="fa fa-star text-primary mr-1"></small>                          
-                        </div>
-                    </div>
+                                <a class="h6 text-decoration-none text-truncate" href=""><?php echo $productName ?></a>
+                                <div class="d-flex align-items-center justify-content-center mt-2">
+                                    <?php if(empty($productdiscount)){ ?>
+                                        <h5><?php echo number_format($productPrice) ?></h5>
+                                    <?php } else {?>                                                                   
+                                        <div class="d-flex align-items-center mt-1" style="gap:10px;">
+                                            <del class="text-muted small me-5">
+                                                Rs <?php echo number_format($productPrice); ?>
+                                            </del>
+                                            <h5 class="fw-bold fs-5">
+                                                Rs <?php echo number_format($productPrice * $productdiscount / 100); ?>
+                                            </h5>
+                                        </div>
+                                    <?php } ?>                               
+                                </div>                  
+                              <?php if($remaining > 0){ ?>
+                                <p class="text-success">In stock</p>
+                                <?php } else { ?>
+                                    <p class="text-danger">Out of stock</p>
+                                <?php } ?>
+                            
+                                <div class="d-flex align-items-center justify-content-center mb-1">
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                    <small class="fa fa-star text-primary mr-1"></small>
+                                </div>
+                            </div>
                 </div>
 
             <?php } ?>
@@ -309,7 +335,6 @@ include('layout/header.php');
                 success: function(response){
                     response = JSON.parse(response);
                     alert(response.message);
-
                     if(response.status === 'success'){
                     $("#cartCount").text(response.cart_count);
                     }
