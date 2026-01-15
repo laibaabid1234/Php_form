@@ -1,7 +1,7 @@
 <?php
 include('../../connection.php');
 
-$limit = 2;
+$limit = 6;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start_from = ($page - 1) * $limit;
 
@@ -65,6 +65,7 @@ $orders = mysqli_query($conn, $ordersQuery);
                     <th>City</th>
                     <th>Zip</th>
                     <th>Total Amount</th>
+                    <th>Final Amount</th>
                     <th>Action</th>
                     <th>Status</th>
                 </tr>
@@ -88,6 +89,7 @@ $orders = mysqli_query($conn, $ordersQuery);
                     <td><?= $row['city'] ?></td>
                     <td><?= $row['zip'] ?></td>
                     <td><?= $row['total_amount'] ?></td>
+                    <td><?= $row['final_amount'] ?></td>
                     <td>
                         <button type="button"
                             class="btn btn-info btn-sm"

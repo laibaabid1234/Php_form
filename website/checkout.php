@@ -6,13 +6,27 @@ if (isset($_SESSION['id'])) {
     $userId = session_id();
 }
 
+$cart_total = 0;
+$tax_rate= 10;
+$total_tax = 0;
+$cart_query = mysqli_query($conn,"SELECT price, quantity FROM cart WHERE user_id='$userId'");
+
+while($row = mysqli_fetch_assoc($cart_query)){
+    $item_total = $row['price'] * $row['quantity'];
+    $item_tax   = ($item_total * $tax_rate) / 100;
+
+    $cart_total += $item_total + $item_tax;
+    $total_tax  += $item_tax;
+}
+$payable = isset($_SESSION['final_total']) ? $_SESSION['final_total'] : $cart_total;
+
 $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,
 cart.total as total, products.p_name as name, products.p_price as price,products.image as 
 image  from cart inner join products on cart.product_id=products.id where cart.user_id='$userId'";
 $cartResult = mysqli_query($conn, $cartQuery);
 
 $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
-$CountQuery = "SELECT COUNT(*) AS count FROM cart WHERE user_id='$user_id'";
+$CountQuery = "SELECT COUNT(*) AS count FROM cart WHERE user_id='$userId'";
 $CountResult = mysqli_query($conn, $CountQuery);
 $CountRow = mysqli_fetch_assoc($CountResult);
 $Count = $CountRow['count'];
@@ -121,7 +135,7 @@ if(isset($_GET['message'])){
                         <div class="pt-2">
                             <div class="d-flex justify-content-between mt-2">
                                 <h5>Total</h5>
-                                <h5 id="total">$160</h5>
+                                <h5><?php echo number_format($payable,2) ?></h5>
                                 <input type="hidden" value="" name="total">
                             </div>
                         </div>

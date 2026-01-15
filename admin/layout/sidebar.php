@@ -104,6 +104,12 @@
           </a>
         </li>
         <li class="pc-item">
+          <a href="<?php echo $basePath; ?>coupon/coupon.php" class="pc-link">
+            <span class="pc-micon"><i class="ti ti-tag"></i></span>
+            <span class="pc-mtext">Coupon Code</span>
+          </a>
+        </li>
+        <li class="pc-item">
           <a href="<?php echo $basePath; ?>contact/contact.php" class="pc-link">
             <span class="pc-micon"><i class="ti ti-phone"></i></span>
             <span class="pc-mtext">Contact</span>

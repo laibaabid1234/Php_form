@@ -14,6 +14,8 @@ if(isset($_POST['subtotal']) && isset($_POST['tax']) && isset($_POST['total'])){
     $subtotal = $_POST['subtotal'];
     $tax = $_POST['tax'];
     $total = $_POST['total'];
+    $final_amount= isset($_SESSION['final_total'])? $_SESSION['final_total']: $total;
+
     $firstName=$_POST['fname'];
     $lastName=$_POST['lname']; 
     $email=$_POST['email'];
@@ -24,12 +26,12 @@ if(isset($_POST['subtotal']) && isset($_POST['tax']) && isset($_POST['total'])){
     $province=$_POST['state'];
     $zip=$_POST['zip'];
 
-
-    $orderQuery = "INSERT INTO orders (user_id, total_amount, tax, first_name,last_name,email,address,contact,country,city,province,zip) 
-    VALUES ('$user_id', '$total', '$tax','$firstName','$lastName','$email','$address','$contact','$country','$city','$province','$zip')";
+    $orderQuery = "INSERT INTO orders (user_id, total_amount, final_amount, tax, first_name,last_name,email,address,contact,country,city,province,zip) 
+    VALUES ('$user_id', '$total', '$final_amount' , '$tax','$firstName','$lastName','$email','$address','$contact','$country','$city','$province','$zip')";
     if(mysqli_query($conn, $orderQuery)){
-        $order_id = mysqli_insert_id($conn);
-    
+
+        $order_id = mysqli_insert_id($conn); 
+
         // while($_POST['product_id']){
         //     $product_id = $_POST['product_id'];
         //     $quantity = $_POST['product_quantity'];
@@ -41,7 +43,6 @@ if(isset($_POST['subtotal']) && isset($_POST['tax']) && isset($_POST['total'])){
         $product_ids     = $_POST['product_id'];
         $quantities      = $_POST['product_quantity'];
         $totals          = $_POST['product_total'];
-
         foreach ($product_ids as $index => $product_id) {
 
             $quantity = $quantities[$index];
@@ -60,9 +61,11 @@ if(isset($_POST['subtotal']) && isset($_POST['tax']) && isset($_POST['total'])){
 
         $clearCartQuery = "DELETE FROM cart WHERE user_id='$user_id'";
         mysqli_query($conn, $clearCartQuery);
-
+   
+    unset($_SESSION['final_total']);
+    unset($_SESSION['discount']);
+    unset($_SESSION['coupon']);
     
-    } 
     $message = "Order placed successfully!";
     header('Location:checkout.php?message=' . urlencode($message));
     exit;
@@ -70,5 +73,6 @@ if(isset($_POST['subtotal']) && isset($_POST['tax']) && isset($_POST['total'])){
     $message = "Invalid request.";
     header('Location:checkout.php?message=' . urlencode($message));
     exit;
+}
 }
 ?>

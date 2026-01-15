@@ -195,13 +195,14 @@ function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
                                 <div class="d-flex align-items-center justify-content-center mt-2">
                                     <?php if(empty($productdiscount)){ ?>
                                         <h5><?php echo number_format($productPrice) ?></h5>
-                                    <?php } else {?>                                                                   
+                                    <?php } else {$productPrice= ($productPrice * $productdiscount / 100)?>  
                                         <div class="d-flex align-items-center mt-1" style="gap:10px;">
                                             <del class="text-muted small me-5">
-                                                Rs <?php echo number_format($productPrice); ?>
+                                                Rs <?php echo number_format($editrow['p_price']); ?>
                                             </del>
+                                            <?php  ?>                                                                
                                             <h5 class="fw-bold fs-5">
-                                                Rs <?php echo number_format($productPrice * $productdiscount / 100); ?>
+                                                Rs <?php echo number_format($productPrice); ?>
                                             </h5>
                                         </div>
                                     <?php } ?>

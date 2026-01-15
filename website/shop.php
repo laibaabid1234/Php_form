@@ -9,12 +9,18 @@ $cartCount = $cartCountRow['count'];
 $query = "SELECT * FROM products";
 $result = mysqli_query($conn, $query);
 $row = $result->fetch_assoc();
-$productId = $row['id'];
+$productId = $row['id'];           
 
 // $query="SELECT remaining FROM products where id= $productId";
 // $remainingquery = $conn->query($query);
 // $remainingproducts = $remainingquery->fetch_assoc();
 // $remaining= $remainingproducts['remaining'];  
+
+echo "<script>
+if (window.history.replaceState) {
+  window.history.replaceState(null, null, window.location.href);
+}
+</script>";
 ?>
   <!-- Cart Start -->
     <div class="container-fluid">
@@ -33,7 +39,10 @@ $productId = $row['id'];
                     </thead>
                     <tbody class="align-middle">
                         <?php 
-                        $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,cart.total as total, products.p_name as name, products.p_price as price,products.image as image ,products.remaining as remaining from cart inner join products on cart.product_id=products.id where cart.user_id='$_SESSION[id]'";
+                        $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,cart.total 
+                        as total, products.p_name as name, products.p_price as price,products.image as image ,
+                        products.remaining as remaining from cart inner join products on cart.product_id=products.id 
+                        where cart.user_id='$_SESSION[id]'";
                         $cartResult = mysqli_query($conn, $cartQuery);
                         while($cartRow = mysqli_fetch_assoc($cartResult)){
                             
@@ -44,9 +53,7 @@ $productId = $row['id'];
                             $productPrice = $cartRow['price'];   
                             $productImage = $cartRow['image'];
                             $cartid = $cartRow['id'];
-                            $remaining = $cartRow['remaining'];
-
-                        ?>
+                            $remaining = $cartRow['remaining']; ?>
 
                         <tr>
                             <td class="align-middle"><img src=" <?php echo  $productImage ?>" alt="" style="width: 50px;"> <?php echo $productName ?></td>
@@ -69,21 +76,21 @@ $productId = $row['id'];
                             <td class="align-middle total_amount"><?php echo $total ?></td>
                             <td class="align-middle"><button class="btn btn-sm btn-danger" data-id="<?php echo $cartid ?>"><i class="fa fa-times"></i></button></td>
                         </tr>
-
                         <?php } ?>
                         
                     </tbody>
                 </table>
             </div>
             <div class="col-lg-4">
-                <form class="mb-30" action="">
+
+                <form class="mb-3">
                     <div class="input-group">
-                        <input type="text" class="form-control border-0 p-4" placeholder="Coupon Code">
+                        <input type="text" id="coupon_code" class="form-control" placeholder="Coupon Code">
                         <div class="input-group-append">
-                            <button class="btn btn-primary">Apply Coupon</button>
+                            <button type="button" id="apply_coupon" class="btn btn-primary">Apply Coupon</button>                       
                         </div>
                     </div>
-                </form>
+                </form>        
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Cart Summary</span></h5>
                 <div class="bg-light p-30 mb-5">
                     <div class="border-bottom pb-2">
@@ -99,7 +106,11 @@ $productId = $row['id'];
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
+                            <span id="discount"></span>
+                            <span id="final_total"></span>
                             <h5 id="total"></h5>
+                            
+
                         </div>
                         <a class="btn btn-block btn-primary font-weight-bold my-3 py-3" href="checkout.php">Proceed To Checkout</a>
                     </div>
@@ -127,6 +138,7 @@ $productId = $row['id'];
                 subtotal += amount;
             });
             $("#subtotal").text(subtotal.toFixed(2));
+            $("#subtotal_input").val(subtotal.toFixed(2));
             var tax = subtotal * 0.10;
             $("#tax").text(tax.toFixed(2));
             var total = subtotal + tax;
@@ -154,8 +166,6 @@ $productId = $row['id'];
             if(currentQuantity <= 1) return;
             quantityInput.val(currentQuantity - 1).change();
         });
-
-
         
         $(".p_quantity").on('change', function(){
             var quantity = $(this).val();
@@ -187,7 +197,6 @@ $productId = $row['id'];
             
         });
 
-
         $(".btn-danger").on('click', function(){
             var cartId = $(this).data("id");
             var row = $(this).closest("tr");
@@ -208,9 +217,42 @@ $productId = $row['id'];
                 }
             });
         });
-        
+
+        $("#apply_coupon").on("click", function(){
+
+            var coupon = $("#coupon_code").val();
+            var total  = parseFloat($("#total").text());
+            $.ajax({
+                url: 'apply_coupon.php',
+                type: 'post',
+                data: {
+                    coupon: coupon,
+                    total: total
+                },
+                success: function(response){
+                    response = JSON.parse(response);
+                    if(response.status == "error"){
+                        alert(response.message);
+                        return;
+                    }
+                    if(response.status == "success"){
+                        $("#discount").text(response.discount);
+                        $("#final_total").text(response.final_total);
+                        $("#total").text(response.final_total);
+                    }
+                }
+            });
     });
-    </script>
+
+
+});
+
+
+//     $("#apply_coupon").on("click", function(){
+//     alert("Button clicked");
+// });
+
+</script>
  <?php 
 include('layout/footer.php');
 ?>
