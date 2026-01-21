@@ -8,24 +8,29 @@ $start_from = ($page - 1) * $limit;
 // base query
 $where = "WHERE 1=1";
 
-$where.=" AND status = 1";
+$where.=" AND p.status = 1";
+$where.=" AND c.status = 1";
+$where.=" AND s.status = 1";
+
 
 // search
 if (!empty($_GET['search'])) {
     $search = mysqli_real_escape_string($conn, $_GET['search']);
-    $where .= " AND p_name LIKE '%$search%'";
+    $where .= " AND p.p_name LIKE '%$search%'";
 }
 
 // categories
 if (!empty($_GET['cat_id'])) {
     $catid = (int)$_GET['cat_id'];
-    $where .= " AND cat_id = $catid";
+    $where .= " AND p.cat_id = $catid";
 }
 
 if (!empty($_GET['sub_cat'])) {
     $subid = (int)$_GET['sub_cat'];
-    $where .= " AND subcat_id = $subid";
+    $where .= " AND p.subcat_id = $subid";
 }
+
+
 // preserve a base where-clause (without any price filter) for counting buckets
 $base_where = $where;
 
@@ -36,12 +41,12 @@ if(isset($_GET['price']) && $_GET['price'] != null && $_GET['price'] != 'all'){
         $min_price = (float)$price_range[0];
         $max_price = (float)$price_range[1];
         // apply price filter to main where used for listing/pagination
-        $where .= " AND p_price BETWEEN $min_price AND $max_price";
+        $where .= " AND p.p_price BETWEEN $min_price AND $max_price";
     }
 }
 
 // count total rows
-$countquery = "SELECT COUNT(id) AS total FROM products $where";
+$countquery = "SELECT COUNT(p.id) AS total FROM products p inner join category c on p.cat_id=c.id inner join sub_category s on p.subcat_id = s.id $where";
 $count_result = mysqli_query($conn, $countquery);
 $count_row = mysqli_fetch_assoc($count_result);
 $total_records = $count_row['total'];
@@ -49,21 +54,23 @@ $total_pages = ceil($total_records / $limit);
 
 
 // final data query
-$query = "SELECT * FROM products $where LIMIT $start_from, $limit";
+$query = "SELECT p.id, p.p_name, p.p_price, p.image AS image, p.discount as discount, c.name AS name FROM products p inner join category c on p.cat_id=c.id inner join sub_category s on p.subcat_id = s.id $where LIMIT $start_from, $limit";
 $result = mysqli_query($conn, $query);
 
-function countProducts($conn, $min, $max, $base_where = "WHERE 1=1") {
-    // always count items in the given price bucket, ignoring any current price filter
-    $where_clause = $base_where . " AND p_price BETWEEN " . (float)$min . " AND " . (float)$max;
-    $sql = "SELECT COUNT(id) AS total FROM products " . $where_clause;
+function countProducts($conn, $min, $max, $base_where) {
+
+    $where_clause = $base_where . " AND p.p_price BETWEEN " . (float)$min . " AND " . (float)$max;
+
+    $sql = "SELECT COUNT(p.id) AS total FROM products p INNER JOIN category c ON p.cat_id = c.id inner join sub_category s on p.subcat_id = s.id $where_clause";
     $result = mysqli_query($conn, $sql);
-    if($result){
-        $row = mysqli_fetch_assoc($result);
-        echo (int)$row['total'];
-    } else {
-        echo 0;
+
+    if(!$result){
+        echo "0";
     }
-} ?>
+
+    $row = mysqli_fetch_assoc($result);
+    echo (int)$row['total'];
+}?>
  <!-- Shop Start -->
     <div class="container-fluid">
         <div class="row px-xl-5">

@@ -116,7 +116,7 @@ if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'user')
                 <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 bg-light" id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999;">
                     <div class="navbar-nav w-100">                      
                         <?php 
-                        $sql = "SELECT id, name FROM category";  
+                        $sql = "SELECT id, name FROM category where status=1";  
                         $result = $conn->query($sql);
                         while ($row = $result->fetch_assoc()) {
                         $categoryId = $row['id'];
@@ -125,7 +125,7 @@ if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'user')
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><?php echo $categoryName; ?> <i class="fa fa-angle-right float-right mt-1"></i></a>                                    
                         <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
                         <?php 
-                        $subSql = "SELECT id, name FROM sub_category WHERE cat_id = $categoryId";
+                        $subSql = "SELECT id, name FROM sub_category WHERE cat_id = $categoryId and status=1";
                         $subResult = $conn->query($subSql);                                        
                         while ($subRow = $subResult->fetch_assoc()) {
                             $subCategoryId = $subRow['id'];

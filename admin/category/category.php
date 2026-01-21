@@ -247,7 +247,8 @@ if (window.history.replaceState) {
                        </td>      
                        <td>                        
                           <div class="form-check form-switch">
-                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['id'] ?>" type="checkbox" <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch">                                              
+                            <input class="form-check-input toggle" id="toggle_id" value="<?php echo $row['id'] ?>" type="checkbox"
+                             <?php if($row['status']==1){ echo 'checked'; } ?> name="toggle" role="switch">                                              
                           </div>                                                              
                        </td>
                        <td>

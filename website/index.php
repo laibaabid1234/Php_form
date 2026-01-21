@@ -13,7 +13,7 @@ include('layout/header.php');
                     </ol>    
                     <div class="carousel-inner">
                         <?php 
-                        $sql = "SELECT id, name,image FROM category";  
+                        $sql = "SELECT id, name,image FROM category where status=1";  
                         $result = $conn->query($sql);
                         $active = "active"; 
                         while ($row = $result->fetch_assoc()) {
@@ -96,7 +96,7 @@ include('layout/header.php');
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Categories</span></h2>
         <div class="row px-xl-5 pb-3">
             <?php 
-            $featuredsql = "SELECT * FROM category WHERE is_featured=1 LIMIT 4 ";  
+            $featuredsql = "SELECT * FROM category WHERE is_featured=1 and status=1 LIMIT 4 ";  
             $featuredresult = $conn->query($featuredsql);
             while ($row = $featuredresult->fetch_assoc()) {
             $featuredId = $row['id'];
@@ -126,7 +126,10 @@ include('layout/header.php');
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Featured Products</span></h2>
         <div class="row px-xl-5">
             <?php 
-            $featuredproductsql = "SELECT * FROM products WHERE is_featured=1 AND remaining > 0 LIMIT 4 ";  
+            $featuredproductsql = "SELECT p.id, p.p_name, p.p_price, p.image AS image, p.discount as discount, 
+            c.name AS name, s.name as s_name FROM products p inner join category c on p.cat_id=c.id 
+            inner join sub_category s on p.subcat_id = s.id
+            WHERE p.status=1 and c.status=1 and s.status=1 AND p.is_featured=1 AND p.remaining > 0  LIMIT 4 ";  
             $featuredproductresult = $conn->query($featuredproductsql);
             while ($row = $featuredproductresult->fetch_assoc()) {
             $productId = $row['id'];
@@ -137,7 +140,7 @@ include('layout/header.php');
             ?>
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
             <?php 
-            $query="SELECT remaining FROM products where id= $productId";
+            $query="SELECT remaining FROM products where id= $productId AND status=1";
             $remainingquery = $conn->query($query);
             $remainingproducts = $remainingquery->fetch_assoc();
             $remaining= $remainingproducts['remaining'];  ?>           
@@ -223,7 +226,9 @@ include('layout/header.php');
         <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Recent Products</span></h2>
         <div class="row px-xl-5">
             <?php 
-            $recentproductsql = "SELECT * FROM products WHERE remaining > 0 ORDER BY id DESC LIMIT 4 ";  
+            $recentproductsql = "SELECT p.id, p.p_name, p.p_price, p.image AS image, p.discount as discount, c.name AS name, s.name as 
+            subcategory_name FROM products p inner join category c on p.cat_id=c.id inner join sub_category s on p.subcat_id=s.id
+            WHERE p.status=1 and c.status=1 and s.status=1 AND remaining > 0 ORDER BY id DESC LIMIT 4 ";  
             $recentproductresult = $conn->query($recentproductsql);
             while ($row = $recentproductresult->fetch_assoc()) {
             $productId = $row['id'];
@@ -234,7 +239,7 @@ include('layout/header.php');
             ?>
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
             <?php 
-            $query="SELECT remaining FROM products where id= $productId";
+            $query="SELECT remaining FROM products where id= $productId AND status=1";
             $remainingquery = $conn->query($query);
             $remainingproducts = $remainingquery->fetch_assoc();
             $remaining= $remainingproducts['remaining'];  
