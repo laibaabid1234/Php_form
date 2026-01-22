@@ -1,5 +1,6 @@
  <?php 
  include ('layout/header.php');
+ include ('price_function.php');
 
 $limit = 6;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -41,7 +42,7 @@ if(isset($_GET['price']) && $_GET['price'] != null && $_GET['price'] != 'all'){
         $min_price = (float)$price_range[0];
         $max_price = (float)$price_range[1];
         // apply price filter to main where used for listing/pagination
-        $where .= " AND p.p_price BETWEEN $min_price AND $max_price";
+        $where .= " AND (p.p_price - (p.p_price * p.discount / 100)) BETWEEN $min_price AND $max_price";
     }
 }
 
@@ -59,7 +60,7 @@ $result = mysqli_query($conn, $query);
 
 function countProducts($conn, $min, $max, $base_where) {
 
-    $where_clause = $base_where . " AND p.p_price BETWEEN " . (float)$min . " AND " . (float)$max;
+    $where_clause = $base_where . " AND (p.p_price - (p.p_price * p.discount / 100)) BETWEEN " . (float)$min . " AND " . (float)$max;
 
     $sql = "SELECT COUNT(p.id) AS total FROM products p INNER JOIN category c ON p.cat_id = c.id inner join sub_category s on p.subcat_id = s.id $where_clause";
     $result = mysqli_query($conn, $sql);
@@ -88,7 +89,7 @@ function countProducts($conn, $min, $max, $base_where) {
                             <?php } ?>
                              <?php if (isset($_GET['search'])) { ?>
                                 <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search']) ?>">    
-                            <?php } ?>                          
+                            <?php } ?>                                             
                         <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                             <input type="radio" name="price" <?= (isset($_GET['price']) && $_GET['price'] == '0-1000') ? 'checked' : '' ?>  class="custom-control-input" id="price-1" value="0-1000">
                             <label class="custom-control-label" for="price-1">0 - 1000</label>
@@ -178,7 +179,8 @@ function countProducts($conn, $min, $max, $base_where) {
                             $productName = $editrow['p_name'];  
                             $productPrice = $editrow['p_price'];
                             $productImage = $editrow['image']; 
-                            $productdiscount= $editrow['discount'];                                    
+                            $productdiscount= $editrow['discount']; 
+                            $finalPrice = getFinalPrice($productPrice, $productdiscount);                                   
                     ?>
                     <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
                     <?php 
@@ -192,9 +194,9 @@ function countProducts($conn, $min, $max, $base_where) {
                                 <img class="img-fluid" src="../admin/<?php echo $productImage ?>" alt="" style="width:100%; height:250px; object-fit:cover;">
                                 <div class="product-action">
                                     <?php if($remaining > 0){ ?>
-                                    <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" ><i class="fa fa-shopping-cart"></i></a>
+                                    <a class="btn btn-outline-dark btn-square add_to_cart" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" data-discount="<?php echo $productdiscount ?>" ><i class="fa fa-shopping-cart"></i></a>
                                     <?php }  ?>
-                                    <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>"><i class="far fa-heart"></i></a>
+                                    <a class="btn btn-outline-dark btn-square add_to_wishlist" data-id="<?php echo $productId ?>" data-price="<?php echo $productPrice ?>" data-discount="<?php echo $productdiscount ?>"><i class="far fa-heart"></i></a>
                                 </div>
                             </div>
                             <div class="text-center py-4">
@@ -202,14 +204,14 @@ function countProducts($conn, $min, $max, $base_where) {
                                 <div class="d-flex align-items-center justify-content-center mt-2">
                                     <?php if(empty($productdiscount)){ ?>
                                         <h5><?php echo number_format($productPrice) ?></h5>
-                                    <?php } else {$productPrice= ($productPrice * $productdiscount / 100)?>  
+                                    <?php } else { ?>  
                                         <div class="d-flex align-items-center mt-1" style="gap:10px;">
                                             <del class="text-muted small me-5">
-                                                Rs <?php echo number_format($editrow['p_price']); ?>
+                                                Rs <?php echo number_format($productPrice); ?>
                                             </del>
                                             <?php  ?>                                                                
                                             <h5 class="fw-bold fs-5">
-                                                Rs <?php echo number_format($productPrice); ?>
+                                                Rs <?php echo number_format($finalPrice); ?>
                                             </h5>
                                         </div>
                                     <?php } ?>
@@ -232,6 +234,10 @@ function countProducts($conn, $min, $max, $base_where) {
                         </div>                            
                     </div>
                     <?php } ?>
+                    <?php } else { ?>
+                    <div class="no-result">
+                        No result found
+                    </div>
                     <?php } ?>
 
                     <?php if($total_pages > 1){ ?>
@@ -296,10 +302,11 @@ function countProducts($conn, $min, $max, $base_where) {
         $(".add_to_cart").click(function(){
             var productId = $(this).data("id");
             var productPrice = $(this).data("price");
+            var productdiscount= $(this).data("discount");
             $.ajax({
                 url: 'add_to_cart.php',
                 type: 'post',
-                data: {productId: productId, price: productPrice},
+                data: {productId: productId, price: productPrice, discount : productdiscount},
                 success: function(response){
                     response = JSON.parse(response);
                     alert(response.message);
@@ -318,10 +325,11 @@ function countProducts($conn, $min, $max, $base_where) {
         $(".add_to_wishlist").click(function(){
             var productId = $(this).data("id");
             var productPrice = $(this).data("price");
+            var productdiscount= $(this).data("discount");
             $.ajax({
                 url: 'add_to_wishlist.php', 
                 type: 'post',
-                data: {productId: productId, price: productPrice},
+                data: {productId: productId, price: productPrice, discount : productdiscount},
                 success: function(response){
                     response = JSON.parse(response);
                     alert(response.message);

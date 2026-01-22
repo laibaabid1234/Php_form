@@ -1,5 +1,6 @@
 <?php
 include('layout/header.php');
+include('price_function.php');
 $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
 $cartCountQuery = "SELECT COUNT(*) AS count FROM cart WHERE user_id='$user_id'";
 $cartCountResult = mysqli_query($conn, $cartCountQuery);
@@ -40,7 +41,7 @@ if (window.history.replaceState) {
                     <tbody class="align-middle">
                         <?php 
                         $cartQuery = "select cart.id as id,cart.quantity as quantity,cart.product_id as product_id,cart.total 
-                        as total, products.p_name as name, products.p_price as price,products.image as image ,
+                        as total, products.p_name as name, products.p_price as price,products.image as image , products.discount as discount,
                         products.remaining as remaining from cart inner join products on cart.product_id=products.id 
                         where cart.user_id='$_SESSION[id]'";
                         $cartResult = mysqli_query($conn, $cartQuery);
@@ -50,14 +51,16 @@ if (window.history.replaceState) {
                             $total= $cartRow['total'];
                             $productId = $cartRow['product_id'];
                             $productName = $cartRow['name'];
-                            $productPrice = $cartRow['price'];   
+                            $productPrice = $cartRow['price']; 
+                            $productdiscount = $cartRow['discount'];
+                            $cartPrice = getFinalPrice($productPrice, $productdiscount);  
                             $productImage = $cartRow['image'];
                             $cartid = $cartRow['id'];
                             $remaining = $cartRow['remaining']; ?>
 
                         <tr>
                             <td class="align-middle"><img src=" <?php echo  $productImage ?>" alt="" style="width: 50px;"> <?php echo $productName ?></td>
-                            <td class="align-middle price"><?php echo $productPrice ?></td>
+                            <td class="align-middle price"><?php echo $cartPrice ?></td>
                             <td class="align-middle">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                     <div class="input-group-btn">

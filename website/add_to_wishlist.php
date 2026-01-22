@@ -1,5 +1,6 @@
 <?php
 include('../connection.php');
+include('price_function.php');
 if(isset($_SESSION['user_role']) && $_SESSION['user_role'] != 'user')
 {
     header("Location: ../admin/dashboard.php");
@@ -9,14 +10,16 @@ $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
 
 if(isset($_POST['wishlistUpdate']) && $_POST['wishlistUpdate'] == "true"){
     $wishlist_id = $_POST['productId'];
-    $price = $_POST['price'];
+    $productPrice = $_POST['price'];
+    $productdiscount = $_POST['discount'];
+    $cartPrice = getFinalPrice($productPrice, $productdiscount);
 
     if(!$user_id){
         echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
         exit;
     }
 
-    $updateQuery = "UPDATE wishlist SET price='$price' WHERE id='$wishlist_id'";
+    $updateQuery = "UPDATE wishlist SET price='$cartPrice' WHERE id='$wishlist_id'";
     if(mysqli_query($conn, $updateQuery)){
         echo json_encode(['status' => 'success', 'message' => 'Wishlist updated successfully']);
     } else {
@@ -28,6 +31,8 @@ if(isset($_POST['wishlistUpdate']) && $_POST['wishlistUpdate'] == "true"){
 if(isset($_POST['productId'])) {
     $product_id = $_POST['productId'];
     $product_price = $_POST['price'];
+    $productdiscount = $_POST['discount'];
+    $cartPrice = getFinalPrice($product_price, $productdiscount);
     
     if(!$user_id){
         echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
@@ -41,7 +46,7 @@ if(isset($_POST['productId'])) {
         exit;
     }
 
-    $cart="INSERT INTO wishlist (user_id, product_id, price) VALUES ('$user_id','$product_id', '$product_price')";
+    $cart="INSERT INTO wishlist (user_id, product_id, price) VALUES ('$user_id','$product_id', '$cartPrice')";
     mysqli_query($conn, $cart);
     $cartCountQuery = "SELECT COUNT(*) AS count FROM wishlist WHERE user_id='$user_id'";
     $cartCountResult = mysqli_query($conn, $cartCountQuery);

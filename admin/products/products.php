@@ -63,9 +63,12 @@ if(isset($_POST['featuredId']) && $_POST['featuredId'] != null){
 if(isset($_POST['p_id'], $_POST['discount'])){
     $Id = $_POST['p_id'];
     $discount = $_POST['discount'];
-    if($discount < 0 || $discount > 90){
-      $discountmsg="Discount value must be between 0 and 90";
-      return;
+    if ($discount < 0 || $discount > 90) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Discount value must be between 0 and 90'
+        ]);
+        exit;
     }
     $updatedQuery = "UPDATE products SET discount = $discount WHERE id = $Id";
     $discountchanged=mysqli_query($conn, $updatedQuery);
@@ -243,7 +246,6 @@ if (window.history.replaceState) {
                       <td><?php echo $row['sub_name'] ?></td> 
                       <td><?php echo $row['quantity'] ?></td> 
                       <td><?php echo $row['remaining'] ?></td> 
-                      
                       <td>
                         <input type="number" class="discount" data-id="<?php echo $row['p_id']; ?>" name="discount" 
                         min="0" max="90" value="<?php echo $row['discount']; ?>">                    
@@ -355,12 +357,20 @@ if (window.history.replaceState) {
     $('.discount').on('input',function(){
      var discount= $(this).val();
      var productId = $(this).data('id');  
+        if (discount < 0 || discount > 90) {
+        alert('Discount must be between 0 and 90');
+        return;
+        } 
         $.ajax({
           url:'products.php',
           type:'post',
           data:{p_id:productId, discount:discount},
           success:function(response){
-            response = JSON.parse(response);          
+            if (response.status === 'error') {
+                alert(response.message);
+            } else {
+                console.log('Discount updated');
+            }          
           }
 
         });
